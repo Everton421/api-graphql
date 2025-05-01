@@ -3,6 +3,11 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type ClientePedido {
+  codigo: Int!
+  nome: String!
+}
+
 """dados para a criação de um produto"""
 input CreateProdutoInput {
   ativo: String!
@@ -28,7 +33,30 @@ input CreateProdutoInput {
 }
 
 type Mutation {
-  cadastrarProduto(dados: CreateProdutoInput!): Produto!
+  produto(dados: CreateProdutoInput!): Produto!
+}
+
+type Pedido {
+  cliente: ClientePedido!
+  codigo: Int!
+  contato: String
+  data_cadastro: String!
+  data_recadastro: String!
+  descontos: Float
+  enviado: String
+  forma_pagamento: Int
+  id: Int
+  observacoes: String
+  produtos: [produtoPedido!]
+  quantidade_parcelas: Int
+  situacao: String
+  tipo: Int
+  tipo_os: Int
+  total_geral: Float!
+  total_produtos: Float!
+  total_servicos: Float!
+  veiculo: Int
+  vendedor: Int!
 }
 
 type Produto {
@@ -55,6 +83,13 @@ type Produto {
 }
 
 type Query {
+  getPedidos: Pedido!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
   teste: String!
+}
+
+type produtoPedido {
+  codigo: Int!
+  preco: Float!
+  quantidade: Float!
 }

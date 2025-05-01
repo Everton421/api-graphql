@@ -111,6 +111,7 @@ export class ProdutoRepository{
 
          conn.query(finalSql, valueParamSql ,(err, result:IProduto[] )=>{
             if(err){
+                console.log("Erro ao tentar consultar Produto", err)
                 reject(err)
             }else{
                 resolve(result)

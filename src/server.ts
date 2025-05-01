@@ -4,11 +4,12 @@ import { buildSchema } from "type-graphql";
 import  path  from 'node:path'
 import { TesteResolver } from "./resolvers/teste-resolver";
 import { ProdutoResolver } from "./resolvers/produto-resolver";
+import { PedidoResolver } from "./resolvers/pedido-resolver";
 
 
 async function main(){
     const schema = await buildSchema({
-        resolvers: [ TesteResolver , ProdutoResolver],
+        resolvers: [ TesteResolver , ProdutoResolver, PedidoResolver],
         emitSchemaFile: path.resolve(__dirname, 'schema.gql')
     })
     

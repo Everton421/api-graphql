@@ -12,7 +12,7 @@ export class ProdutoResolver{
 
     repository = new ProdutoRepository();
 
-    @Query(()=>[Produto])
+    @Query(()=>[Produto], { name: "produtos"})
         async produtos(   @Args(){ codigo ,descricao, grupo, marca, ativo, num_fabricante, num_original, origem, sku } :ProdutoArgs  ){
             let param: Partial<ProdutoArgs> = 
              {
@@ -28,11 +28,12 @@ export class ProdutoResolver{
                 }
 
             let aux = await this.repository.finByParam(param); 
+             console.log(aux)
             return aux
         }
 
-    @Mutation(()=>Produto)
-        async cadastrarProduto(@Arg('dados') dados: CreateProdutoInput) {
+    @Mutation(()=>Produto, { name: "produto"})
+        async cadastrarProduto(@Arg('dados') dados: CreateProdutoInput):Promise<Produto> {
             let validProd:IProduto[]=[];
             if(Number(dados.codigo) > 0 ){
                   validProd = await this.repository.findByCode(dados.codigo);

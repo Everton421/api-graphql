@@ -2,7 +2,7 @@ import { QueryError    } from "mysql2";
 import { conn } from "../../database/dataBaseConfig"
 import { IProduto } from "./IProduto"
 import { ProdutoArgs } from "../../dtos/args/produto-args";
-import { Produto } from "../../dtos/models/produto-model";
+import { Produto } from "../../dtos/models/produto/produto-model";
 
 interface param{
     codigo:number

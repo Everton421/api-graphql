@@ -1,11 +1,12 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
-import { ClientePedido } from "./ClientePedido-model";
-import { produtoPedido } from "./ProdutosPedido-model"; 
+import { ClientePedido } from "./cliente-pedido-model";
+import { produtoPedido } from "./produto-pedido-model"; 
+import { BigInt } from "graphql-scalars/typings/typeDefs";
 
 
 @ObjectType()
 export class Pedido{
-    @Field(()=> Int)
+    @Field()
     codigo:number
     
     @Field(()=> ClientePedido)

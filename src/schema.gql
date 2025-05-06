@@ -38,7 +38,7 @@ type Mutation {
 
 type Pedido {
   cliente: ClientePedido!
-  codigo: Int!
+  codigo: Float!
   contato: String
   data_cadastro: String!
   data_recadastro: String!
@@ -83,7 +83,7 @@ type Produto {
 }
 
 type Query {
-  getPedidos: Pedido!
+  pedido: [Pedido!]!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
   teste: String!
 }

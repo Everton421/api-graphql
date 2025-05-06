@@ -1,10 +1,13 @@
 import { Query, Resolver } from "type-graphql";
-import { Pedido } from "../dtos/models/pedido-model";
+import { Pedido } from "../dtos/models/pedido/pedido-model";
+import { PedidoRepository } from "../repository/pedido/pedido-repository";
 
 
 @Resolver(()=> Pedido)
 export class PedidoResolver{
-    
+
+        repository = new PedidoRepository();
+
     pedidoFic: Pedido  =
      {
         cliente:{ codigo:1, nome:'cliente teste'},
@@ -28,8 +31,13 @@ export class PedidoResolver{
          total_geral:0,
          veiculo:0
     } 
-    @Query( ()=>Pedido)
+    @Query( ()=>[Pedido],{ name: "pedido"})
     async getPedidos( ){
-        return this.pedidoFic;
+        try{
+            let orders = await this.repository.findAll()
+            return orders;    
+        }catch(e){
+            console.log(e);
+        }
     }
 }

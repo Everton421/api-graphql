@@ -3,6 +3,25 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Cliente {
+  ativo: String!
+  bairro: String!
+  celular: String!
+  cep: String!
+  cidade: String!
+  cnpj: String!
+  codigo: Int!
+  data_cadastro: String!
+  data_recadastro: String!
+  endereco: String!
+  estado: String!
+  id: String!
+  ie: String!
+  nome: String!
+  numero: String!
+  vendedor: Int!
+}
+
 type ClientePedido {
   codigo: Int!
   nome: String!
@@ -32,8 +51,17 @@ input CreateProdutoInput {
   tipo: Float!
 }
 
+""" Dados para creação de um Serviço"""
+input CreateServicoInput {
+  aplicacao: String!
+  ativo: String!
+  codigo: Int!
+  data_recadastro: String!
+}
+
 type Mutation {
   produto(dados: CreateProdutoInput!): Produto!
+  servico(dados: CreateServicoInput!): Servico!
 }
 
 type Pedido {
@@ -83,9 +111,34 @@ type Produto {
 }
 
 type Query {
+  clientes(
+    """S=sim, N=nao"""
+    ativo: String
+    cnpj: String
+    codigo: Int
+    data_recadastro: String
+    id: String
+    nome: String
+
+    """Código do Vendedor"""
+    vendedor: Int
+  ): [Cliente!]!
   getPedidos: Pedido!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
-  teste: String!
+  servicos(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): [Servico!]!
+}
+
+type Servico {
+  aplicacao: String!
+
+  """S=ativo N=inativo"""
+  ativo: String!
+  codigo: Float!
+  data_cadastro: String!
+  data_recadastro: String!
+  id: Float!
+  tipo_serv: Float!
+  valor: Float!
 }
 
 type produtoPedido {

@@ -2,7 +2,7 @@ import { QueryError    } from "mysql2";
 import { conn } from "../../database/dataBaseConfig"
 import { IProduto } from "./IProduto"
 import { ProdutoArgs } from "../../dtos/args/produto-args";
-import { Produto } from "../../dtos/models/produto-model";
+import { Produto } from "../../dtos/models/produtos/produto-model";
 
 interface param{
     codigo:number
@@ -18,6 +18,9 @@ export class ProdutoRepository{
         return new Promise(   (resolve, reject )  =>{
             const sql = `SELECT  
              *,
+               CAST( observacoes1 as CHAR(10000) CHARACTER SET utf8) as observacoes1,
+         CAST( observacoes2 as CHAR(10000) CHARACTER SET utf8) as observacoes2,
+          CAST( observacoes3 as CHAR(10000) CHARACTER SET utf8) as observacoes3, 
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
         DATE_FORMAT(data_recadastro, '%Y-%m-%d %H:%i:%s') AS data_recadastro 
 
@@ -36,6 +39,9 @@ export class ProdutoRepository{
         return new Promise(   (resolve, reject )  =>{
             const sql = `SELECT  
              *,
+               CAST( observacoes1 as CHAR(10000) CHARACTER SET utf8) as observacoes1,
+         CAST( observacoes2 as CHAR(10000) CHARACTER SET utf8) as observacoes2,
+          CAST( observacoes3 as CHAR(10000) CHARACTER SET utf8) as observacoes3, 
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
              DATE_FORMAT(data_recadastro, '%Y-%m-%d %H:%i:%s') AS data_recadastro 
             FROM ${ this.dbName }.produtos
@@ -58,6 +64,9 @@ export class ProdutoRepository{
 
     const sql = `SELECT  
                   *,
+                    CAST( observacoes1 as CHAR(10000) CHARACTER SET utf8) as observacoes1,
+         CAST( observacoes2 as CHAR(10000) CHARACTER SET utf8) as observacoes2,
+          CAST( observacoes3 as CHAR(10000) CHARACTER SET utf8) as observacoes3, 
         DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
         DATE_FORMAT(data_recadastro, '%Y-%m-%d %H:%i:%s') AS data_recadastro 
          FROM ${ this.dbName }.produtos`  
@@ -109,7 +118,7 @@ export class ProdutoRepository{
           
           let finalSql = sql + whereClause
 
-         conn.query(finalSql, valueParamSql ,(err, result:IProduto[] )=>{
+         conn.query(finalSql, valueParamSql ,(err , result:IProduto[] )=>{
             if(err){
                 console.log("Erro ao tentar consultar Produto", err)
                 reject(err)

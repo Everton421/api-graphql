@@ -1,5 +1,5 @@
 import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
-import { Produto } from "../dtos/models/produto-model";
+import { Produto } from "../dtos/models/produtos/produto-model";
 import { ProdutoRepository } from "../repository/produto/Produto-Repository";
 import { ProdutoArgs } from "../dtos/args/produto-args"; 
 import { CreateProdutoInput } from "../dtos/inputs/create-produto-input";

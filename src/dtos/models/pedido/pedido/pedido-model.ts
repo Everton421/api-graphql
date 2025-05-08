@@ -1,6 +1,6 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
-import { ClientePedido } from "./ClientePedido-model";
-import { produtoPedido } from "./ProdutosPedido-model"; 
+import { ClientePedido } from "../cliente/clientePedido-model";
+import { produtoPedido } from "../produtos-pedido/ProdutosPedido-model";
 
 
 @ObjectType()

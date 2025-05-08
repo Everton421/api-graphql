@@ -1,5 +1,5 @@
 import { Query, Resolver } from "type-graphql";
-import { Pedido } from "../dtos/models/pedido-model";
+import { Pedido } from "../dtos/models/pedido/pedido/pedido-model";
 
 
 @Resolver(()=> Pedido)

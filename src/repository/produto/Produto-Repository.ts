@@ -224,7 +224,16 @@ export class ProdutoRepository{
                     conditions.push(" cst = ? ")
                     valueParamSql.push(produto.cst)
                 }
-                
+                if(produto.descricao){
+                       conditions.push(" descricao = ? ")
+                        valueParamSql.push(produto.descricao)
+                }
+                if(produto.estoque){
+                    conditions.push(" estoque = ? ")
+                    valueParamSql.push(produto.estoque);
+                }
+
+
 
                 let whereClause = " WHERE codigo = ? "
                     valueParamSql.push(produto.codigo);

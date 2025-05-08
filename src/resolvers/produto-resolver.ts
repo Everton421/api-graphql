@@ -55,7 +55,7 @@ export class ProdutoResolver{
             let validProd:IProduto[]=[];
               if(Number(dados.codigo) > 0 ){
                   validProd = await this.repository.findByCode(dados.codigo);
-                }
+                }  
             if(validProd.length > 0 ){
                 //throw new GraphQLError(`O produto ja foi Cadastrado ${dados.codigo}`)
                let result:any =  await this.repository.update(dados)

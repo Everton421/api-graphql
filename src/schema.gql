@@ -60,8 +60,9 @@ input CreateServicoInput {
 }
 
 type Mutation {
-  produto(dados: CreateProdutoInput!): Produto!
+  createProduto(dados: CreateProdutoInput!): Produto!
   servico(dados: CreateServicoInput!): Servico!
+  updateProduto(dados: UpdateProdutoInput!): Produto!
 }
 
 type Pedido {
@@ -139,6 +140,30 @@ type Servico {
   id: Float!
   tipo_serv: Float!
   valor: Float!
+}
+
+"""dados para a criação de um produto"""
+input UpdateProdutoInput {
+  ativo: String
+  class_fiscal: String
+  codigo: Int!
+  cst: String
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String
+  estoque: Float
+  grupo: Int
+  id: Float
+  marca: Int
+  num_fabricante: String
+  num_original: String
+  observacoes1: String
+  observacoes2: String
+  observacoes3: String
+  origem: String
+  preco: Float
+  sku: String
+  tipo: Float
 }
 
 type produtoPedido {

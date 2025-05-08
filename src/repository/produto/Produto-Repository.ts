@@ -202,6 +202,39 @@ export class ProdutoRepository{
                         })
         }
 
+        async update(produto:Produto){
 
+            return new Promise((resolve, reject)=>{
+
+                let sql = 
+                ` UPDATE ${this.dbName}.produtos SET ` 
+                
+                let conditions=[];
+                let valueParamSql=[];
+
+                if(produto.ativo){
+                    conditions.push(" ativo = ? ");
+                    valueParamSql.push( String(produto.ativo));
+                }
+                if(produto.class_fiscal){
+                    conditions.push(" class_fiscal = ?");
+                    valueParamSql.push(produto.class_fiscal);
+                }
+                if(produto.cst){
+                    conditions.push(" cst = ? ")
+                    valueParamSql.push(produto.cst)
+                }
+                
+
+                let whereClause = " WHERE codigo = ? "
+                    valueParamSql.push(produto.codigo);
+
+                let finalSql = sql + conditions.join(" , ") + whereClause;
+
+                console.log(finalSql)
+
+            })
+
+        }
 
 }

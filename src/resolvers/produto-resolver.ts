@@ -5,6 +5,7 @@ import { ProdutoArgs } from "../dtos/args/produto-args";
 import { CreateProdutoInput } from "../dtos/inputs/create-produto-input";
 import { IProduto } from "../repository/produto/IProduto";
 import { GraphQLError } from "graphql";
+import { UpdateProdutoInput } from "../dtos/inputs/update-produto-input";
 
 
 @Resolver(()=>Produto)
@@ -32,18 +33,32 @@ export class ProdutoResolver{
             return aux
         }
 
-    @Mutation(()=>Produto, { name: "produto"})
-        async cadastrarProduto(@Arg('dados') dados: CreateProdutoInput):Promise<Produto> {
+    @Mutation(()=>Produto )
+        async createProduto(@Arg('dados') dados: CreateProdutoInput) {
             let validProd:IProduto[]=[];
             if(Number(dados.codigo) > 0 ){
                   validProd = await this.repository.findByCode(dados.codigo);
                 }
             if(validProd.length > 0 ){
-                throw new GraphQLError(`O produto ja foi Cadastrado ${dados.codigo}`)
+                //throw new GraphQLError(`O produto ja foi Cadastrado ${dados.codigo}`)
+               let result:any =  await this.repository.update(dados)
+
             }else{
                let result:any =  await this.repository.create(dados)
                dados.codigo = result.insertId
                 return dados
+            }
+        }
+
+        @Mutation(()=> Produto )
+        async updateProduto(@Arg('dados') dados: UpdateProdutoInput){
+            let validProd:IProduto[]=[];
+              if(Number(dados.codigo) > 0 ){
+                  validProd = await this.repository.findByCode(dados.codigo);
+                }
+            if(validProd.length > 0 ){
+                //throw new GraphQLError(`O produto ja foi Cadastrado ${dados.codigo}`)
+               let result:any =  await this.repository.update(dados)
             }
         }
 

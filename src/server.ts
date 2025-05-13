@@ -6,11 +6,12 @@ import { ProdutoResolver } from "./resolvers/produto-resolver";
 import { PedidoResolver } from "./resolvers/pedido-resolver";
 import { ClienteResolver } from "./resolvers/cliente-resolver";
 import { ServicoResolver } from "./resolvers/servico-resolver";
+import { CategoriaResolver } from "./resolvers/categoria-resolver";
 
 
 async function main(){
     const schema = await buildSchema({
-        resolvers: [ ClienteResolver , ProdutoResolver, PedidoResolver, ServicoResolver],
+        resolvers: [ ClienteResolver , ProdutoResolver, PedidoResolver, ServicoResolver, CategoriaResolver],
         emitSchemaFile: path.resolve(__dirname, 'schema.gql')
     })
     

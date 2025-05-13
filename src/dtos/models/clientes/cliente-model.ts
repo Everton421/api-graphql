@@ -9,7 +9,7 @@ export class Cliente {
     @Field()
     id:string
     
-    @Field()
+    @Field({nullable:true})
     celular:string
     
     @Field()
@@ -18,13 +18,13 @@ export class Cliente {
     @Field()
     cep:string
 
-    @Field()
+    @Field({nullable:true})
     endereco:string
     
-    @Field()
+    @Field({nullable:true})
     ie:string
 
-    @Field()
+    @Field({nullable:true})
     numero:string
     
     @Field()
@@ -33,7 +33,7 @@ export class Cliente {
     @Field()
     ativo:string
     
-    @Field()
+    @Field({nullable:true})
     cidade:string
     
     @Field()
@@ -45,10 +45,10 @@ export class Cliente {
     @Field(()=>Int)
     vendedor:number
 
-    @Field()
+    @Field({nullable:true})
     bairro:string
 
-    @Field()
+    @Field({nullable:true})
     estado:string
 
 }

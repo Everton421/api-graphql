@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from "type-graphql";
 
 
-@InputType({ description:"dados para a criação de um produto"})
+@InputType({ description:"Dados para a criação de um produto"})
 export class CreateProdutoInput{
 
     @Field(()=> Int)

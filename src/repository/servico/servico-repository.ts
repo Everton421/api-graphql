@@ -2,8 +2,10 @@ import { FieldPacket, QueryError } from "mysql2";
 import { conn } from "../../database/dataBaseConfig";
 import { ServicoArgs } from "../../dtos/args/servico-args";
 import { Servico } from "../../dtos/models/servicos/servico-model";
-import { CreateServicoInput } from "../../dtos/inputs/create-servico-input";
-
+import { CreateServicoInput } from "../../dtos/inputs/servico/create-servico-input";  
+import { UpdateProdutoInput } from "../../dtos/inputs/produto/update-produto-input";
+import { UpdateServicoInput } from "../../dtos/inputs/servico/update-servico-input";
+import { DateService } from "../../service/date-service";
 
 type ResultSetHeader = {
      fieldCount: number,
@@ -18,7 +20,8 @@ type ResultSetHeader = {
 export class ServicoRepository{
 
     dbName = `\`${57473685000100}\``;
-
+    dateService = new DateService();
+     
 
     async findAll():Promise <Servico[]> {
         return new Promise((resolve, reject )=>{
@@ -114,22 +117,7 @@ export class ServicoRepository{
     }
 
 
-    async create(servico:Servico){
-
-        return new Promise( (resolve,reject ) =>{
-            let {
-            aplicacao,
-            ativo,
-            codigo,
-            data_cadastro,
-            data_recadastro,
-            id,
-            tipo_serv,
-            valor,
-            } = servico
-        })
-    }
-
+ 
 
     async insert ( servico:CreateServicoInput): Promise<ResultSetHeader>{
 
@@ -153,17 +141,17 @@ export class ServicoRepository{
                             data_recadastro, 
                             ativo
                                 ) VALUES (
-                                     ${valor},
-                                    '${aplicacao}',
-                                    ${tipo_serv},
-                                   '${data_cadastro}',
-                                   '${data_recadastro}', 
-                                  '${ativo}'
+                                      ? ,
+                                      ? ,
+                                      ? ,
+                                      ? ,
+                                      ? ,
+                                      ?  
                                    )
                             `;
 
                 let dados = [  valor, aplicacao, tipo_serv, data_cadastro, data_recadastro, ativo] 
-                              conn.query(sql,   (err:any, result:ResultSetHeader )=>{
+                              conn.query(sql,dados,   (err:any, result:ResultSetHeader | any )=>{
                                 if(err){
                                      console.log(err)
                                      reject(err);
@@ -176,43 +164,67 @@ export class ServicoRepository{
                         })
         }
 
- async update( empresa:any, servico:any ){
+ async update(   servico:UpdateServicoInput ):Promise<ResultSetHeader>{
   
   
-        const {
-            codigo,
-            id,
-            valor,
-            aplicacao,
-            tipo_serv,
-            data_cadastro,
-            data_recadastro,
-            ativo
-        } = servico;
-  
-        return new Promise( async( resolve, reject)=>{
-            let sql = 
-            `
-            UPDATE ${empresa}.servicos SET 
-              id = ${id},
-              valor = ${valor},
-              aplicacao = '${aplicacao}',
-              tipo_serv = ${tipo_serv},
-              data_cadastro = '${data_cadastro}',
-              data_recadastro = '${data_recadastro}',
-              ativo = '${ativo}'
-                where codigo = ${codigo}
-              `
        
-            await conn.query(sql, (err:any, result:any )=>{
+  
+        return new Promise(  ( resolve, reject)=>{
+          
+              let sql = `UPDATE ${ this.dbName}.servicos SET `
+       
+            let paramSql = []
+            let valueSql =[]
+
+            if( servico.aplicacao){
+                paramSql.push(" aplicacao = ? ");
+                valueSql.push(servico.aplicacao);
+            }
+
+            if( servico.ativo){
+                paramSql.push(" ativo = ? ")
+                valueSql.push(servico.ativo)
+            }
+
+            if( servico.valor){
+                paramSql.push(" valor = ? ")
+                valueSql.push(servico.valor)
+            }
+            if(servico.tipo_serv){
+                paramSql.push(" tipo_serv = ? ")
+                valueSql.push(servico.tipo_serv)
+            }
+            if(servico.id){
+                paramSql.push(" id = ? ")
+                valueSql.push(servico.id)
+            }
+            if(servico.data_cadastro){
+                paramSql.push(" data_cadastro = ? ")
+                valueSql.push(servico.data_cadastro)
+            }
+                paramSql.push(" data_recadastro = ? ")
+                valueSql.push( this.dateService.obterDataHoraAtual())
+           
+            valueSql.push(servico.codigo)
+
+            paramSql.join(" , ")
+
+
+            let finalSql = sql + paramSql + " WHERE codigo = ? "    
+           // console.log("SQL : ", finalSql);
+           // console.log("Values:", valueSql);
+
+              conn.query(finalSql, valueSql, (err:any, result:ResultSetHeader | any )=>{
                 if(err){
                     console.log(err)
                     reject(err);
                }else{
                    console.log(`servico atualizado com sucesso `)
+                   console.log(result)
                     resolve(result);
                }
             })
+             
        
             })
     }

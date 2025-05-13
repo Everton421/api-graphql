@@ -24,10 +24,11 @@ export class Produto{
     @Field()
     origem:string
 
-    @Field()
+    
+    @Field({nullable:true})
     num_fabricante:string
 
-    @Field()
+    @Field({nullable:true})
     num_original:string
 
     @Field()
@@ -52,13 +53,13 @@ export class Produto{
     @Field()
     data_cadastro:string
 
-    @Field()
+    @Field({nullable:true})
     observacoes1:string
     
-    @Field()
+    @Field({nullable:true})
     observacoes2:string
 
-    @Field()
+    @Field({nullable:true})
     observacoes3:string
     
     @Field()

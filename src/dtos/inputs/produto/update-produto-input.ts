@@ -64,4 +64,6 @@ export class UpdateProdutoInput{
     
     @Field({nullable:true})
     tipo:number
+
+
 }

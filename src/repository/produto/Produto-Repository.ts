@@ -3,12 +3,21 @@ import { conn } from "../../database/dataBaseConfig"
 import { IProduto } from "./IProduto"
 import { ProdutoArgs } from "../../dtos/args/produto-args";
 import { Produto } from "../../dtos/models/produtos/produto-model";
+import { UpdateProdutoInput } from "../../dtos/inputs/produto/update-produto-input";
 
 interface param{
     codigo:number
     descricao:string
 }
-
+type ResultSetHeader = {
+     fieldCount: number,
+    affectedRows: number,
+    insertId: number,
+    info: any,
+    serverStatus: number,
+    warningStatus: number,
+    changedRows: number
+}
 export class ProdutoRepository{
 
        dbName = `\`${57473685000100}\``;
@@ -130,7 +139,7 @@ export class ProdutoRepository{
 
     }
 
-    async create(produto:Produto)  {
+    async create(produto:Produto):Promise<ResultSetHeader> {
         return new Promise(   ( resolve, reject)=>{
             let {
                 ativo,
@@ -190,7 +199,7 @@ export class ProdutoRepository{
                                   )
                             `;
 
-                              conn.query(sql,   (err:any, result   )=>{
+                              conn.query(sql,   (err:any, result:ResultSetHeader   )=>{
                                 if(err){
                                      console.log(err)
                                      reject(err);
@@ -202,48 +211,113 @@ export class ProdutoRepository{
                         })
         }
 
-        async update(produto:Produto){
+    async update(produto: UpdateProdutoInput): Promise<ResultSetHeader> {
 
-            return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
 
-                let sql = 
-                ` UPDATE ${this.dbName}.produtos SET ` 
-                
-                let conditions=[];
-                let valueParamSql=[];
+            let sql =
+                ` UPDATE ${this.dbName}.produtos SET `
 
-                if(produto.ativo){
-                    conditions.push(" ativo = ? ");
-                    valueParamSql.push( String(produto.ativo));
-                }
-                if(produto.class_fiscal){
-                    conditions.push(" class_fiscal = ?");
-                    valueParamSql.push(produto.class_fiscal);
-                }
-                if(produto.cst){
-                    conditions.push(" cst = ? ")
-                    valueParamSql.push(produto.cst)
-                }
-                if(produto.descricao){
-                       conditions.push(" descricao = ? ")
-                        valueParamSql.push(produto.descricao)
-                }
-                if(produto.estoque){
-                    conditions.push(" estoque = ? ")
-                    valueParamSql.push(produto.estoque);
-                }
+            let conditions = [];
+            let valueParamSql = [];
+            if (produto.descricao) {
+                conditions.push(" descricao = ? ")
+                valueParamSql.push(produto.descricao)
+            }
+
+            if (produto.preco) {
+                conditions.push(" preco = ? ")
+                valueParamSql.push(produto.preco);
+            }
+            if (produto.id) {
+                conditions.push(" id = ? ")
+                valueParamSql.push(produto.id);
+            }
+            if (produto.estoque) {
+                conditions.push(" estoque = ? ")
+                valueParamSql.push(produto.estoque);
+            }
+
+            if (produto.grupo) {
+                conditions.push(" grupo = ? ");
+                valueParamSql.push(produto.grupo);
+            }
+            if (produto.origem) {
+                conditions.push(" origem = ? ");
+                valueParamSql.push(String(produto.origem));
+            }
+            if (produto.num_fabricante) {
+                conditions.push(" num_fabricante = ? ");
+                valueParamSql.push(String(produto.num_fabricante));
+            }
+
+            if (produto.ativo) {
+                conditions.push(" ativo = ? ");
+                valueParamSql.push(String(produto.ativo));
+            }
+            if (produto.sku) {
+                conditions.push(" sku = ? ");
+                valueParamSql.push(String(produto.sku));
+            }
+            if (produto.marca) {
+                conditions.push(" marca = ? ");
+                valueParamSql.push(produto.marca);
+            }
+
+            if (produto.class_fiscal) {
+                conditions.push(" class_fiscal = ?");
+                valueParamSql.push(produto.class_fiscal);
+            }
+            if (produto.cst) {
+                conditions.push(" cst = ?");
+                valueParamSql.push(produto.cst);
+            }
+
+            if (produto.data_cadastro) {
+                conditions.push(" data_cadastro = ? ");
+                valueParamSql.push(String(produto.data_cadastro));
+            }
+            if (produto.data_recadastro) {
+                conditions.push(" data_recadastro = ? ");
+                valueParamSql.push(String(produto.data_recadastro));
+            }
+
+            if (produto.observacoes1) {
+                conditions.push(" observacoes1 = ? ");
+                valueParamSql.push(String(produto.observacoes1));
+            }
+            if (produto.observacoes2) {
+                conditions.push(" observacoes2 = ? ");
+                valueParamSql.push(String(produto.observacoes2));
+            }
+            if (produto.observacoes3) {
+                conditions.push(" observacoes3 = ? ");
+                valueParamSql.push(String(produto.observacoes3));
+            }
+            if (produto.tipo) {
+                conditions.push(" tipo = ? ");
+                valueParamSql.push(produto.tipo);
+            }
 
 
+            let whereClause = " WHERE codigo = ? "
+            valueParamSql.push(produto.codigo);
 
-                let whereClause = " WHERE codigo = ? "
-                    valueParamSql.push(produto.codigo);
+            let finalSql = sql + conditions.join(" , ") + whereClause;
 
-                let finalSql = sql + conditions.join(" , ") + whereClause;
+          
+                         conn.query(finalSql, valueParamSql,  (err:any, result:ResultSetHeader | any   )=>{
+                                                if(err){
+                                                    console.log(err)
+                                                    reject(err);
+                                                }else{
+                                                    console.log(`produto atualizado com sucesso `)
+                                                    resolve(result);
+                                                }
+                                            })
+                                     
+        })
 
-                console.log(finalSql)
-
-            })
-
-        }
+    }
 
 }

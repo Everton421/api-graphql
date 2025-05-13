@@ -3,22 +3,31 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Categoria {
+  ativo: String
+  codigo: Int!
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String!
+  id: Int
+}
+
 type Cliente {
   ativo: String!
-  bairro: String!
-  celular: String!
+  bairro: String
+  celular: String
   cep: String!
-  cidade: String!
+  cidade: String
   cnpj: String!
   codigo: Int!
   data_cadastro: String!
   data_recadastro: String!
-  endereco: String!
-  estado: String!
+  endereco: String
+  estado: String
   id: String!
-  ie: String!
+  ie: String
   nome: String!
-  numero: String!
+  numero: String
   vendedor: Int!
 }
 
@@ -27,7 +36,26 @@ type ClientePedido {
   nome: String!
 }
 
-"""dados para a criação de um produto"""
+""" Dados para a criação de um cliente"""
+input CreateClienteInput {
+  ativo: String
+  bairro: String
+  celular: String
+  cep: String
+  cidade: String
+  cnpj: String!
+  data_cadastro: String
+  data_recadastro: String
+  endereco: String
+  estado: String
+  id: Int!
+  ie: String
+  nome: String!
+  numero: String
+  vendedor: Int!
+}
+
+"""Dados para a criação de um produto"""
 input CreateProdutoInput {
   ativo: String!
   class_fiscal: String!
@@ -51,13 +79,13 @@ input CreateProdutoInput {
   tipo: Float!
 }
 
-""" Dados para creação de um Serviço"""
+""" Dados para criação de um Serviço"""
 input CreateServicoInput {
   aplicacao: String!
-  ativo: String!
+  ativo: String
   codigo: Int
-  data_cadastro: String!
-  data_recadastro: String!
+  data_cadastro: String
+  data_recadastro: String
   id: Int
   tipo_serv: Int
   valor: Float!
@@ -65,7 +93,10 @@ input CreateServicoInput {
 
 type Mutation {
   CreateServico(dados: CreateServicoInput!): Servico!
+  UpdateServico(dados: UpdateServicoInput!): Servico!
+  createCliente(dados: CreateClienteInput!): Cliente!
   createProduto(dados: CreateProdutoInput!): Produto!
+  updateCliente(dados: UpdateClienteInput!): Cliente!
   updateProduto(dados: UpdateProdutoInput!): Produto!
 }
 
@@ -104,11 +135,11 @@ type Produto {
   grupo: Float!
   id: Float!
   marca: Float!
-  num_fabricante: String!
-  num_original: String!
-  observacoes1: String!
-  observacoes2: String!
-  observacoes3: String!
+  num_fabricante: String
+  num_original: String
+  observacoes1: String
+  observacoes2: String
+  observacoes3: String
   origem: String!
   preco: Float!
   sku: String!
@@ -128,6 +159,7 @@ type Query {
     """Código do Vendedor"""
     vendedor: Int
   ): [Cliente!]!
+  findCategorias(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): [Categoria!]!
   getPedidos: Pedido!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
   servicos(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): [Servico!]!
@@ -144,6 +176,25 @@ type Servico {
   id: Float!
   tipo_serv: Float!
   valor: Float!
+}
+
+input UpdateClienteInput {
+  ativo: String
+  bairro: String
+  celular: String
+  cep: String
+  cidade: String
+  cnpj: String
+  codigo: Int
+  data_cadastro: String
+  data_recadastro: String
+  endereco: String
+  estado: String
+  id: Int
+  ie: String
+  nome: String
+  numero: String
+  vendedor: Int
 }
 
 """dados para a criação de um produto"""
@@ -168,6 +219,18 @@ input UpdateProdutoInput {
   preco: Float
   sku: String
   tipo: Float
+}
+
+"""Dados para atualizção de um serviço"""
+input UpdateServicoInput {
+  aplicacao: String
+  ativo: String
+  codigo: Int!
+  data_cadastro: String
+  data_recadastro: String
+  id: Int
+  tipo_serv: Int
+  valor: Float
 }
 
 type produtoPedido {

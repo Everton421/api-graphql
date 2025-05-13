@@ -55,13 +55,17 @@ input CreateProdutoInput {
 input CreateServicoInput {
   aplicacao: String!
   ativo: String!
-  codigo: Int!
+  codigo: Int
+  data_cadastro: String!
   data_recadastro: String!
+  id: Int
+  tipo_serv: Int
+  valor: Float!
 }
 
 type Mutation {
+  CreateServico(dados: CreateServicoInput!): Servico!
   createProduto(dados: CreateProdutoInput!): Produto!
-  servico(dados: CreateServicoInput!): Servico!
   updateProduto(dados: UpdateProdutoInput!): Produto!
 }
 

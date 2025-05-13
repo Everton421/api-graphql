@@ -28,9 +28,27 @@ export class ServicoResolver{
         return aux;
     }
 
-    @Mutation(()=> Servico, { name:"servico"})
+     
+    @Mutation(()=> Servico, { name:"CreateServico"})
     async cadastrarServico( @Arg('dados') dados: CreateServicoInput ) :Promise<Servico> {
-        return ;
+            let resultInsertService =   await this.repository.insert(dados)
+          
+             let dadosService: Servico  =
+              {
+
+                    aplicacao:dados.aplicacao,
+                    ativo: dados.ativo,
+                    data_cadastro: dados.data_cadastro,
+                    data_recadastro: dados.data_recadastro,
+                    id: dados.id,
+                    tipo_serv:dados.tipo_serv,
+                    valor: dados.valor,
+                    codigo:resultInsertService.insertId
+                }
+             return dadosService;
     }
+
+      @Mutation(()=> Servico, { name: "UpdateServico"})
+ 
 
 }

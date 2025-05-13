@@ -2,9 +2,18 @@ import { FieldPacket, QueryError } from "mysql2";
 import { conn } from "../../database/dataBaseConfig";
 import { ServicoArgs } from "../../dtos/args/servico-args";
 import { Servico } from "../../dtos/models/servicos/servico-model";
+import { CreateServicoInput } from "../../dtos/inputs/create-servico-input";
 
 
-
+type ResultSetHeader = {
+     fieldCount: number,
+    affectedRows: number,
+    insertId: number,
+    info: any,
+    serverStatus: number,
+    warningStatus: number,
+    changedRows: number
+}
 
 export class ServicoRepository{
 
@@ -22,7 +31,7 @@ export class ServicoRepository{
             from 
             ${this.dbName}.servicos
             `
-            conn.query(sql, ( err, result:Servico[] )=>{
+            conn.query(sql, ( err:any, result:Servico[] )=>{
                 if(err){
                     reject(err)
                 }else{
@@ -119,6 +128,93 @@ export class ServicoRepository{
             valor,
             } = servico
         })
+    }
+
+
+    async insert ( servico:CreateServicoInput): Promise<ResultSetHeader>{
+
+       return new Promise(   ( resolve, reject)=>{
+            let {
+             
+                valor,
+                aplicacao,
+                tipo_serv,
+                data_cadastro,
+                data_recadastro,
+                ativo
+                    } = servico
+
+                const sql =` INSERT INTO  ${this.dbName}.servicos  
+                             (
+                            valor ,
+                            aplicacao,
+                            tipo_serv,
+                            data_cadastro,
+                            data_recadastro, 
+                            ativo
+                                ) VALUES (
+                                     ${valor},
+                                    '${aplicacao}',
+                                    ${tipo_serv},
+                                   '${data_cadastro}',
+                                   '${data_recadastro}', 
+                                  '${ativo}'
+                                   )
+                            `;
+
+                let dados = [  valor, aplicacao, tipo_serv, data_cadastro, data_recadastro, ativo] 
+                              conn.query(sql,   (err:any, result:ResultSetHeader )=>{
+                                if(err){
+                                     console.log(err)
+                                     reject(err);
+                                }else{
+                                    console.log(`servico cadastrado com sucesso `)
+                                    console.log(result)
+                                     resolve(result);
+                                }
+                            })
+                        })
+        }
+
+ async update( empresa:any, servico:any ){
+  
+  
+        const {
+            codigo,
+            id,
+            valor,
+            aplicacao,
+            tipo_serv,
+            data_cadastro,
+            data_recadastro,
+            ativo
+        } = servico;
+  
+        return new Promise( async( resolve, reject)=>{
+            let sql = 
+            `
+            UPDATE ${empresa}.servicos SET 
+              id = ${id},
+              valor = ${valor},
+              aplicacao = '${aplicacao}',
+              tipo_serv = ${tipo_serv},
+              data_cadastro = '${data_cadastro}',
+              data_recadastro = '${data_recadastro}',
+              ativo = '${ativo}'
+                where codigo = ${codigo}
+              `
+       
+            await conn.query(sql, (err:any, result:any )=>{
+                if(err){
+                    console.log(err)
+                    reject(err);
+               }else{
+                   console.log(`servico atualizado com sucesso `)
+                    resolve(result);
+               }
+            })
+       
+            })
     }
 
 } 

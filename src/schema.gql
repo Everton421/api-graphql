@@ -163,6 +163,7 @@ type Query {
   getPedidos: Pedido!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
   servicos(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): [Servico!]!
+  veiculos(ano: String, ativo: String, cliente: Int, codigo: Int, combustivel: String, cor: String, data_cadastro: String, data_recadastro: String, id: Int, marca: String, modelo: String, placa: String): Veiculo!
 }
 
 type Servico {
@@ -231,6 +232,21 @@ input UpdateServicoInput {
   id: Int
   tipo_serv: Int
   valor: Float
+}
+
+type Veiculo {
+  ano: String!
+  ativo: String!
+  cliente: Int!
+  codigo: Int!
+  combustivel: String!
+  cor: String!
+  data_cadastro: String!
+  data_recadastro: String!
+  id: Int!
+  marca: String!
+  modelo: String!
+  placa: String!
 }
 
 type produtoPedido {

@@ -2,10 +2,9 @@ import { FieldPacket, QueryError } from "mysql2";
 import { conn } from "../../database/dataBaseConfig";
 import { ServicoArgs } from "../../dtos/args/servico-args";
 import { Servico } from "../../dtos/models/servicos/servico-model";
-import { CreateServicoInput } from "../../dtos/inputs/servico/create-servico-input";  
-import { UpdateProdutoInput } from "../../dtos/inputs/produto/update-produto-input";
+import { CreateServicoInput } from "../../dtos/inputs/servico/create-servico-input";
 import { UpdateServicoInput } from "../../dtos/inputs/servico/update-servico-input";
-import { DateService } from "../../service/date-service";
+
 
 type ResultSetHeader = {
      fieldCount: number,
@@ -20,8 +19,7 @@ type ResultSetHeader = {
 export class ServicoRepository{
 
     dbName = `\`${57473685000100}\``;
-    dateService = new DateService();
-     
+
 
     async findAll():Promise <Servico[]> {
         return new Promise((resolve, reject )=>{
@@ -55,7 +53,7 @@ export class ServicoRepository{
             from 
             ${this.dbName}.servicos where codigo = ? 
             `
-            conn.query(sql, codigo, ( err, result:any )=>{
+            conn.query(sql, codigo, ( err:any, result:any )=>{
                 if(err){
                     reject(err)
                 }else{
@@ -104,7 +102,7 @@ export class ServicoRepository{
 
             let finalSql = sql + whereClause
 
-                conn.query(finalSql, valueParamSql, ( err  ,result:any  )=>{
+                conn.query(finalSql, valueParamSql, ( err:any  ,result:any  )=>{
                     if(err){
                         console.log("Erro ao tentar consultar os Serviços")
                         reject(err)
@@ -117,7 +115,22 @@ export class ServicoRepository{
     }
 
 
- 
+    async create(servico:Servico){
+
+        return new Promise( (resolve,reject ) =>{
+            let {
+            aplicacao,
+            ativo,
+            codigo,
+            data_cadastro,
+            data_recadastro,
+            id,
+            tipo_serv,
+            valor,
+            } = servico
+        })
+    }
+
 
     async insert ( servico:CreateServicoInput): Promise<ResultSetHeader>{
 
@@ -141,17 +154,14 @@ export class ServicoRepository{
                             data_recadastro, 
                             ativo
                                 ) VALUES (
-                                      ? ,
-                                      ? ,
-                                      ? ,
-                                      ? ,
-                                      ? ,
-                                      ?  
+                                     ? ,? ,? ,?, ?, ?
                                    )
                             `;
 
+                            const values = [  valor ,  aplicacao ,  tipo_serv ,  data_cadastro ,   data_recadastro  ,  ativo  ]
+
                 let dados = [  valor, aplicacao, tipo_serv, data_cadastro, data_recadastro, ativo] 
-                              conn.query(sql,dados,   (err:any, result:ResultSetHeader | any )=>{
+                              conn.query(sql,   (err:any, result:ResultSetHeader )=>{
                                 if(err){
                                      console.log(err)
                                      reject(err);
@@ -165,66 +175,61 @@ export class ServicoRepository{
         }
 
  async update(   servico:UpdateServicoInput ):Promise<ResultSetHeader>{
-  
-  
-       
+   
   
         return new Promise(  ( resolve, reject)=>{
-          
-              let sql = `UPDATE ${ this.dbName}.servicos SET `
+            let sql = 
+            `
+            UPDATE ${ this.dbName }.servicos SET 
+            
+              `
+                let conditions=[];
+                let values=[];
+
+                if( servico.aplicacao){
+                    conditions.push(" aplicacao = ? ")
+                    values.push(servico.aplicacao)
+                }
+                if(servico.ativo ){
+                    conditions.push(" ativo = ? ")
+                    values.push(servico.ativo)
+                }
+                if( servico.id){
+                    conditions.push(" id = ? ")
+                    values.push(servico.id)
+                }
+                if( servico.tipo_serv){
+                    conditions.push(" tipo_serv = ? ")
+                    values.push(servico.tipo_serv)
+                }
+                if(servico.valor ){
+                    conditions.push(" valor = ? ")
+                    values.push(servico.valor)
+                }
+
+                 if(servico.data_cadastro ){
+                    conditions.push(" data_cadastro = ? ")
+                    values.push(servico.data_cadastro)
+                }
+                if(servico.data_recadastro ){
+                    conditions.push(" data_recadastro = ? ")
+                    values.push(servico.data_recadastro)
+                }
+                let whereClause = " WHERE codigo = ? "
+                values.push(servico.codigo)
+
+                let finalSql = sql + conditions.join(" , ")+ whereClause;
+
        
-            let paramSql = []
-            let valueSql =[]
-
-            if( servico.aplicacao){
-                paramSql.push(" aplicacao = ? ");
-                valueSql.push(servico.aplicacao);
-            }
-
-            if( servico.ativo){
-                paramSql.push(" ativo = ? ")
-                valueSql.push(servico.ativo)
-            }
-
-            if( servico.valor){
-                paramSql.push(" valor = ? ")
-                valueSql.push(servico.valor)
-            }
-            if(servico.tipo_serv){
-                paramSql.push(" tipo_serv = ? ")
-                valueSql.push(servico.tipo_serv)
-            }
-            if(servico.id){
-                paramSql.push(" id = ? ")
-                valueSql.push(servico.id)
-            }
-            if(servico.data_cadastro){
-                paramSql.push(" data_cadastro = ? ")
-                valueSql.push(servico.data_cadastro)
-            }
-                paramSql.push(" data_recadastro = ? ")
-                valueSql.push( this.dateService.obterDataHoraAtual())
-           
-            valueSql.push(servico.codigo)
-
-            paramSql.join(" , ")
-
-
-            let finalSql = sql + paramSql + " WHERE codigo = ? "    
-           // console.log("SQL : ", finalSql);
-           // console.log("Values:", valueSql);
-
-              conn.query(finalSql, valueSql, (err:any, result:ResultSetHeader | any )=>{
+              conn.query(finalSql,values, (err:QueryError | null, result:ResultSetHeader | any )=>{
                 if(err){
                     console.log(err)
                     reject(err);
                }else{
                    console.log(`servico atualizado com sucesso `)
-                   console.log(result)
                     resolve(result);
                }
             })
-             
        
             })
     }

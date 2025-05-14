@@ -59,8 +59,7 @@ export class ServicoResolver{
        async updateServico( @Arg('dados') dados: UpdateServicoInput ):Promise<any> {
 
         let verifiService = await this.repository.findByCode(dados.codigo)
-        let service = verifiService[0];
-         
+      
         if(!dados.id ) dados.id = 0;
          dados.data_recadastro = this.dateService.obterDataHoraAtual();
 
@@ -68,9 +67,10 @@ export class ServicoResolver{
                 throw new GraphQLError(   'Erro', { extensions:{ code:" CUSTOM_ERROR ", message: "Servico nao encontrado" } }  )
             }    
             let resultUpdateService = await this.repository.update(dados)
-            if(resultUpdateService.serverStatus > 0 ){
-                    let serviceResult:Servico[] = await this.repository.findByCode(dados.codigo)
-                return serviceResult[0];
+           
+              if(resultUpdateService.serverStatus > 0 ){
+                     let serviceResult:Servico[] = await this.repository.findByCode(dados.codigo)
+                 return serviceResult[0];
             } 
        }
 

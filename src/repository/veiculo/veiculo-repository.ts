@@ -1,5 +1,6 @@
 import { conn } from "../../database/dataBaseConfig";
 import { VeiculoArgs } from "../../dtos/args/veiculo-args";
+import { CreateVeiculoInput } from "../../dtos/inputs/veiculo/create-veiculo-input";
 import { Veiculo } from "../../dtos/models/veiculo/veiculo-model";
 
 
@@ -145,5 +146,37 @@ export class VeiculoRepository{
     
             })
         }
-    
+
+             async insert(veiculo: CreateVeiculoInput): Promise<ResultSetHeader> {
+                return new Promise((resolve, reject) => {
+                    let sql =
+                        `  
+                 INSERT INTO 
+                 ${this.dbName}.veiculos
+                      (   
+                        id,
+                        cliente,
+                        placa,
+                        marca,
+                        modelo,
+                        ano,
+                        cor,
+                        combustivel,
+                        data_cadastro,
+                        data_recadastro,
+                        ativo
+                       ) values
+                        (
+                          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+                    `
+                    const dados = [veiculo.id, veiculo.cliente, veiculo.placa, veiculo.marca, veiculo.modelo, veiculo.ano,
+                    veiculo.cor, veiculo.combustivel,  veiculo.data_cadastro, veiculo.data_recadastro, veiculo.ativo]
+        
+                    conn.query(sql, dados, (err: any, result: ResultSetHeader | any) => {
+                        if (err) reject(err);
+                        resolve(result)
+                    })
+                })
+            }
+ 
 } 

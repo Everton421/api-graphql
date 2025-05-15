@@ -91,11 +91,26 @@ input CreateServicoInput {
   valor: Float!
 }
 
+input CreateVeiculoInput {
+  ano: String
+  ativo: String
+  cliente: Int!
+  combustivel: String
+  cor: String
+  data_cadastro: String
+  data_recadastro: String
+  id: Int
+  marca: String
+  modelo: String
+  placa: String!
+}
+
 type Mutation {
   CreateServico(dados: CreateServicoInput!): Servico!
   UpdateServico(dados: UpdateServicoInput!): Servico!
   createCliente(dados: CreateClienteInput!): Cliente!
   createProduto(dados: CreateProdutoInput!): Produto!
+  createVeiculo(dados: CreateVeiculoInput!): Veiculo!
   updateCliente(dados: UpdateClienteInput!): Cliente!
   updateProduto(dados: UpdateProdutoInput!): Produto!
 }
@@ -163,7 +178,7 @@ type Query {
   getPedidos: Pedido!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
   servicos(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): [Servico!]!
-  veiculos(ano: String, ativo: String, cliente: Int, codigo: Int, combustivel: String, cor: String, data_cadastro: String, data_recadastro: String, id: Int, marca: String, modelo: String, placa: String): Veiculo!
+  veiculos(ano: String, ativo: String, cliente: Int, codigo: Int, combustivel: String, cor: String, data_cadastro: String, data_recadastro: String, id: Int, marca: String, modelo: String, placa: String): [Veiculo!]!
 }
 
 type Servico {

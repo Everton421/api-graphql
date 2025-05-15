@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class Veiculo{
-    @Field(()=> Int)   
+    @Field(()=> Int )   
     codigo:number
 
     @Field(()=> Int)   

@@ -92,16 +92,16 @@ input CreateServicoInput {
 }
 
 input CreateVeiculoInput {
-  ano: String
-  ativo: String
+  ano: String!
+  ativo: String!
   cliente: Int!
-  combustivel: String
-  cor: String
+  combustivel: String!
+  cor: String!
   data_cadastro: String
   data_recadastro: String
-  id: Int
-  marca: String
-  modelo: String
+  id: Int!
+  marca: String!
+  modelo: String!
   placa: String!
 }
 
@@ -113,6 +113,7 @@ type Mutation {
   createVeiculo(dados: CreateVeiculoInput!): Veiculo!
   updateCliente(dados: UpdateClienteInput!): Cliente!
   updateProduto(dados: UpdateProdutoInput!): Produto!
+  updateVeiculo(dados: UpdateVeiculoInput!): Veiculo!
 }
 
 type Pedido {
@@ -247,6 +248,21 @@ input UpdateServicoInput {
   id: Int
   tipo_serv: Int
   valor: Float
+}
+
+input UpdateVeiculoInput {
+  ano: String
+  ativo: String
+  cliente: Int
+  codigo: Int
+  combustivel: String
+  cor: String
+  data_cadastro: String
+  data_recadastro: String
+  id: Int
+  marca: String
+  modelo: String
+  placa: String
 }
 
 type Veiculo {

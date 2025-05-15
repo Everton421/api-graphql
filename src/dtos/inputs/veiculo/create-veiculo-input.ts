@@ -7,7 +7,7 @@ export class CreateVeiculoInput  {
 
    
     
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int )
     id: number
     
     @Field(() => Int )
@@ -16,19 +16,19 @@ export class CreateVeiculoInput  {
     @Field()
     placa: string
     
-    @Field({ nullable: true })
+    @Field()
     marca: string
     
-    @Field({ nullable: true })
+    @Field()
     modelo: string
     
-    @Field({ nullable: true })
+    @Field()
     ano: string
     
-    @Field({ nullable: true })
+    @Field()
     cor: string
     
-    @Field({ nullable: true })
+    @Field()
     combustivel: string
 
     @Field({ nullable: true })
@@ -37,7 +37,7 @@ export class CreateVeiculoInput  {
     @Field({ nullable: true })
     data_recadastro: string
 
-    @Field({ nullable: true })
+    @Field()
     ativo: string
 
 

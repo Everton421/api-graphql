@@ -1,6 +1,7 @@
 import { conn } from "../../database/dataBaseConfig";
 import { VeiculoArgs } from "../../dtos/args/veiculo-args";
 import { CreateVeiculoInput } from "../../dtos/inputs/veiculo/create-veiculo-input";
+import { UpdateVeiculoInput } from "../../dtos/inputs/veiculo/update-veiculo-input";
 import { Veiculo } from "../../dtos/models/veiculo/veiculo-model";
 
 
@@ -179,4 +180,78 @@ export class VeiculoRepository{
                 })
             }
  
+
+     async update(veiculo:UpdateVeiculoInput): Promise<ResultSetHeader>{
+                return new Promise((resolve,reject ) =>{
+
+                let sql = `
+                    UPDATE ${ this.dbName }.veiculos SET 
+                ` 
+
+                let conditions=[]
+                let values=[]
+
+                if( veiculo.ano){
+                    conditions.push(" ano = ? ")
+                    values.push(veiculo.ano)
+                }
+                if( veiculo.ativo){
+                    conditions.push(" ativo = ? ")
+                    values.push(veiculo.ativo)
+                }
+                
+                if( veiculo.cliente){
+                    conditions.push(" cliente = ? ")
+                    values.push(veiculo.cliente)
+                }
+
+                if( veiculo.combustivel){
+                    conditions.push(" combustivel = ? ")
+                    values.push(veiculo.combustivel)
+                }
+                if( veiculo.cor){
+                    conditions.push(" cor = ? ")
+                    values.push(veiculo.cor)
+                }
+                if( veiculo.data_cadastro){
+                    conditions.push(" data_cadastro = ? ")
+                    values.push(veiculo.data_cadastro)
+                }
+                if( veiculo.data_recadastro){
+                    conditions.push(" data_recadastro = ? ")
+                    values.push(veiculo.data_recadastro)
+                }
+                if(veiculo.id){
+                    conditions.push(" id = ? ")
+                    values.push(veiculo.id)
+                }
+                
+                if(veiculo.marca){
+                    conditions.push(" marca = ? ")
+                    values.push(veiculo.marca)
+                }
+                if(veiculo.modelo){
+                    conditions.push(" modelo = ? ")
+                    values.push(veiculo.modelo)
+                }
+                
+                if(veiculo.placa){
+                    conditions.push(" placa = ? ")
+                    values.push(veiculo.placa)
+                }
+                values.push(veiculo.codigo)
+
+           let whereClause = " WHERE CODIGO = ? "
+                
+           let finalSql = conditions.join( ' , ') + whereClause
+                
+                   conn.query(finalSql, values, (err: any, result: ResultSetHeader | any) => {
+                        if (err) reject(err);
+                        resolve(result)
+                    })
+
+                })
+                
+                
+            }
 } 

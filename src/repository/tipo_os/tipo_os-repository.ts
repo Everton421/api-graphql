@@ -1,22 +1,21 @@
 import { ResultSetHeader } from "mysql2";
 import { conn } from "../../database/dataBaseConfig";
-import { CategoriaArgs } from "../../dtos/args/categoria-args";
-import { Categoria } from "../../dtos/models/categoria/categoria-model";
-import { CreateCategoriaInput } from "../../dtos/inputs/categoria/create-categorias";
-import { UpdateCategoriaInput } from "../../dtos/inputs/categoria/update-categorias";
+import { TiposOsArgs } from "../../dtos/args/tipos_os-args";
+import { CreateTiposOsInput } from "../../dtos/inputs/tipos_os/create-tipos_os-input";
+import { UpdateTiposOsInput } from "../../dtos/inputs/tipos_os/update-tipos_os-input";
 
-export class CategoriaRepository{
+export class TipoOsRepository{
  
     dbName = `\`${57473685000100}\``;
 
-        async findByParam(param: Partial<CategoriaArgs>): Promise<any[]> {
+        async findByParam(param: Partial<TiposOsArgs>): Promise<any[]> {
             return new Promise((resolve, reject) => {
     
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias `
+                FROM ${this.dbName}.tipos_os `
     
                 let conditions = [];
                 let valueParamSql = [];
@@ -56,7 +55,7 @@ export class CategoriaRepository{
     
                 conn.query(finalSql, valueParamSql, (err:any, result:  any[]) => {
                     if (err) {
-                        console.log("erro ao consultar as categorias ", err);
+                        console.log("erro ao consultar os tipos_os ", err);
                         reject(err)
                     } else {
                         resolve(result)
@@ -66,17 +65,17 @@ export class CategoriaRepository{
     
             })
         }
-      async findByCode(code: number): Promise<Categoria[]> {
+      async findByCode(code: number): Promise<TiposOsArgs[]> {
             return new Promise((resolve, reject) => {
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias WHERE codigo = ? 
+                FROM ${this.dbName}.tipos_os WHERE codigo = ? 
                 `
-                conn.query(sql, code, (err, result: Categoria[] | any) => {
+                conn.query(sql, code, (err, result: TiposOsArgs[] | any) => {
                     if (err) {
-                        console.log("erro ao consultar as categorias ", err);
+                        console.log("erro ao consultar os tipos_os ", err);
                         reject(err)
                     } else {
                         resolve(result)
@@ -88,13 +87,13 @@ export class CategoriaRepository{
         }
 
 
-           async create(categoria : CreateCategoriaInput): Promise<ResultSetHeader> {
+           async create(categoria : CreateTiposOsInput): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
 
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.categorias
+                 ${this.dbName}.tipos_os
                       (   
                         id,
                         descricao,
@@ -114,10 +113,10 @@ export class CategoriaRepository{
                 })
             }
         
-            async update(categoria: UpdateCategoriaInput ):Promise<ResultSetHeader>{
+            async update(categoria: UpdateTiposOsInput ):Promise<ResultSetHeader>{
         
                 return new Promise((resolve, reject ) =>{
-                    let sql = `UPDATE ${this.dbName}.categorias SET 
+                    let sql = `UPDATE ${this.dbName}.tipos_os SET 
                     ` 
         
                     let conditions=[];
@@ -152,7 +151,7 @@ export class CategoriaRepository{
                             if(err){
                                 reject(err)
                             }else{
-                                console.log("categoria alterada com sucesso")
+                                console.log("tipo_os  alterada com sucesso")
                                 resolve(result)
                             }
                         })

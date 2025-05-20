@@ -16,39 +16,44 @@ export class VeiculoResolver{
 
     @Query( ()=> [Veiculo])
     async veiculos(@Args(){ ano, ativo, cliente, codigo, combustivel, cor, data_cadastro, data_recadastro, id, marca, modelo, placa}: VeiculoArgs){
-         
         let params = { ano, ativo, cliente, codigo, combustivel, cor, data_cadastro, data_recadastro, id, marca, modelo, placa}
-
-            let result = this.repository.findByParam(params);
+            let result = await this.repository.findByParam(params);
         return result
- 
     }
 
-@Mutation(()=> Veiculo)
-async createVeiculo(@Arg('dados') dados:CreateVeiculoInput){
-     dados.data_cadastro = this.dateService.obterDataAtual();
-     dados.data_recadastro = this.dateService.obterDataHoraAtual();
-         let result = await this.repository.insert(dados);
+    @Query(()=>Veiculo)
+    async veiculo(@Args(){ ano, ativo, cliente,codigo,combustivel,cor,data_cadastro,data_recadastro,id,marca,modelo,placa }:VeiculoArgs){
+        let params = { ano, ativo, cliente, codigo, combustivel, cor, data_cadastro, data_recadastro, id, marca, modelo, placa}
+            let arrVeiculos = await this.repository.findByParam(params);
+            let resultVeiculo = arrVeiculos[0] 
+        return resultVeiculo;
+     }
 
-        if( result.insertId > 0 ){
-            let dados = await this.repository.findByCode(result.insertId)
-            return dados[0];
-        }
-} 
+    @Mutation(()=> Veiculo)
+    async createVeiculo(@Arg('dados') dados:CreateVeiculoInput){
+        dados.data_cadastro = this.dateService.obterDataAtual();
+        dados.data_recadastro = this.dateService.obterDataHoraAtual();
+            let result = await this.repository.insert(dados);
+
+            if( result.insertId > 0 ){
+                let dados = await this.repository.findByCode(result.insertId)
+                return dados[0];
+            }
+        } 
 
 
-@Mutation(()=> Veiculo)
-async updateVeiculo(@Arg('dados') dados: UpdateVeiculoInput){
+    @Mutation(()=> Veiculo)
+    async updateVeiculo(@Arg('dados') dados: UpdateVeiculoInput){
 
-    dados.data_recadastro = this.dateService.obterDataHoraAtual();
+        dados.data_recadastro = this.dateService.obterDataHoraAtual();
 
-         let resultUpdateVeic = await this.repository.update(dados)
+            let resultUpdateVeic = await this.repository.update(dados)
 
-            if(resultUpdateVeic.serverStatus > 0){
-                return await this.repository.findByCode(dados.codigo);
-            } 
-}
-    
+                if(resultUpdateVeic.serverStatus > 0){
+                    return await this.repository.findByCode(dados.codigo);
+                } 
+         }
+        
 
 
 }

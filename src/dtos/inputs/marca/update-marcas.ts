@@ -1,12 +1,15 @@
 import { Field, InputType, Int } from "type-graphql";
 
 @InputType()
-export class CreateCategoriaInput{
+export class UpdateMarcasInput{
+
+    @Field(()=> Int, {nullable:true})
+    codigo:number
 
     @Field(()=> Int, {nullable:true})
     id:number
 
-    @Field()
+    @Field({ nullable:true })
     descricao:string
 
     @Field({ nullable:true })

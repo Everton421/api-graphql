@@ -36,6 +36,14 @@ type ClientePedido {
   nome: String!
 }
 
+input CreateCategoriaInput {
+  ativo: String
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String!
+  id: Int
+}
+
 """ Dados para a criação de um cliente"""
 input CreateClienteInput {
   ativo: String
@@ -53,6 +61,26 @@ input CreateClienteInput {
   nome: String!
   numero: String
   vendedor: Int!
+}
+
+input CreateFormaPagamentoInput {
+  ativo: String
+  data_cadastro: String
+  data_recadastro: String
+  desc_maximo: Int
+  descricao: String!
+  id: Int
+  intervalo: Int!
+  parcelas: Int!
+  recebimento: Int
+}
+
+input CreateMarcasInput {
+  ativo: String
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String!
+  id: Int
 }
 
 """Dados para a criação de um produto"""
@@ -91,6 +119,14 @@ input CreateServicoInput {
   valor: Float!
 }
 
+input CreateTiposOsInput {
+  ativo: String
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String!
+  id: Int
+}
+
 input CreateVeiculoInput {
   ano: String!
   ativo: String!
@@ -105,14 +141,44 @@ input CreateVeiculoInput {
   placa: String!
 }
 
+type FormaPagamento {
+  ativo: String!
+  codigo: Int!
+  data_cadastro: String!
+  data_recadastro: String!
+  desc_maximo: Int!
+  descricao: String!
+  id: Int!
+  intervalo: Int!
+  parcelas: Int!
+  recebimento: Int!
+}
+
+type Marca {
+  ativo: String
+  codigo: Int!
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String!
+  id: Int
+}
+
 type Mutation {
+  CreateFormaPagamento(dados: CreateFormaPagamentoInput!): FormaPagamento!
   CreateServico(dados: CreateServicoInput!): Servico!
+  UpdateFormaPagamento(dados: UpdateFormaPagamentoInput!): FormaPagamento!
   UpdateServico(dados: UpdateServicoInput!): Servico!
+  createCategoria(dados: CreateCategoriaInput!): Categoria!
   createCliente(dados: CreateClienteInput!): Cliente!
+  createMarca(dados: CreateMarcasInput!): Marca!
   createProduto(dados: CreateProdutoInput!): Produto!
+  createTipoOs(dados: CreateTiposOsInput!): TiposOs!
   createVeiculo(dados: CreateVeiculoInput!): Veiculo!
+  updateCategoria(dados: UpdateCategoriaInput!): Categoria!
   updateCliente(dados: UpdateClienteInput!): Cliente!
+  updateMarca(dados: UpdateMarcasInput!): Marca!
   updateProduto(dados: UpdateProdutoInput!): Produto!
+  updateTipoOs(dados: UpdateTiposOsInput!): TiposOs!
   updateVeiculo(dados: UpdateVeiculoInput!): Veiculo!
 }
 
@@ -163,6 +229,18 @@ type Produto {
 }
 
 type Query {
+  cliente(
+    """S=sim, N=nao"""
+    ativo: String
+    cnpj: String
+    codigo: Int
+    data_recadastro: String
+    id: String
+    nome: String
+
+    """Código do Vendedor"""
+    vendedor: Int
+  ): Cliente!
   clientes(
     """S=sim, N=nao"""
     ativo: String
@@ -175,10 +253,26 @@ type Query {
     """Código do Vendedor"""
     vendedor: Int
   ): [Cliente!]!
+  findCategoria(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): Categoria!
   findCategorias(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): [Categoria!]!
+
+  """marca"""
+  findMarca(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): Marca!
+
+  """marcas"""
+  findMarcas(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): [Marca!]!
+  findTipoOs(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): TiposOs!
+  findTiposOs(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): [TiposOs!]!
+
+  """ Filtra somente uma forma de pagamento"""
+  formaPagamento(ativo: Int!, codigo: Int!, data_cadastro: String!, data_recadastro: Int!, desc_maximo: Int!, descricao: String!, id: Int!, intervalo: Int!, parcelas: Int!, recebimento: Int!): FormaPagamento!
+  formasPagamento(ativo: Int!, codigo: Int!, data_cadastro: String!, data_recadastro: Int!, desc_maximo: Int!, descricao: String!, id: Int!, intervalo: Int!, parcelas: Int!, recebimento: Int!): [FormaPagamento!]!
   getPedidos: Pedido!
+  produto(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): Produto!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
+  servico(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): Servico!
   servicos(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): [Servico!]!
+  veiculo(ano: String, ativo: String, cliente: Int, codigo: Int, combustivel: String, cor: String, data_cadastro: String, data_recadastro: String, id: Int, marca: String, modelo: String, placa: String): Veiculo!
   veiculos(ano: String, ativo: String, cliente: Int, codigo: Int, combustivel: String, cor: String, data_cadastro: String, data_recadastro: String, id: Int, marca: String, modelo: String, placa: String): [Veiculo!]!
 }
 
@@ -193,6 +287,24 @@ type Servico {
   id: Float!
   tipo_serv: Float!
   valor: Float!
+}
+
+type TiposOs {
+  ativo: String
+  codigo: Int!
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String!
+  id: Int
+}
+
+input UpdateCategoriaInput {
+  ativo: String
+  codigo: Int
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String
+  id: Int
 }
 
 input UpdateClienteInput {
@@ -212,6 +324,28 @@ input UpdateClienteInput {
   nome: String
   numero: String
   vendedor: Int
+}
+
+input UpdateFormaPagamentoInput {
+  ativo: String
+  codigo: Float!
+  data_cadastro: String
+  data_recadastro: String
+  desc_maximo: Int
+  descricao: String
+  id: Int
+  intervalo: Int
+  parcelas: Int
+  recebimento: Int
+}
+
+input UpdateMarcasInput {
+  ativo: String
+  codigo: Int
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String
+  id: Int
 }
 
 """dados para a criação de um produto"""
@@ -248,6 +382,15 @@ input UpdateServicoInput {
   id: Int
   tipo_serv: Int
   valor: Float
+}
+
+input UpdateTiposOsInput {
+  ativo: String
+  codigo: Int!
+  data_cadastro: String
+  data_recadastro: String
+  descricao: String
+  id: Int
 }
 
 input UpdateVeiculoInput {

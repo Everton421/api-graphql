@@ -33,6 +33,28 @@ export class ProdutoResolver{
             return aux
         }
 
+  @Query(()=>Produto, { name:"produto"})   
+        async findproduto(@Args(){codigo,ativo,descricao,grupo,marca,num_fabricante,num_original,origem,sku } :  ProdutoArgs ){
+             let param: Partial<ProdutoArgs> = 
+             {
+                    codigo:codigo,
+                    descricao: descricao,
+                    marca: marca,
+                    grupo : grupo,
+                    ativo: ativo,
+                    num_fabricante:num_fabricante,
+                    num_original:num_original,
+                    origem:origem,
+                    sku:sku   
+                }
+
+            let aux:Produto[] = await this.repository.finByParam(param); 
+            let resultado:Produto = aux[0];
+            return  resultado
+
+        }
+
+
     @Mutation(()=>Produto )
         async createProduto(@Arg('dados') dados: CreateProdutoInput) {
             

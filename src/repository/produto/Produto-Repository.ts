@@ -68,7 +68,7 @@ export class ProdutoRepository{
         })
     }
 
-   async finByParam(param: Partial<ProdutoArgs>){
+   async finByParam(param: Partial<ProdutoArgs>):Promise<Produto[]>{
     return new Promise((resolve,reject )=>{
 
     const sql = `SELECT  

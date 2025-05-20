@@ -18,7 +18,7 @@ export class ServicoResolver{
         repository = new ServicoRepository();
         dateService = new DateService();
 
-    @Query( ()=>[Servico])
+    @Query( ()=>[Servico], { name:"servicos"})
     async servicos( @Args(){ aplicacao, ativo, codigo, data_recadastro}:ServicoArgs ){
             let param:ServicoArgs = { 
                 aplicacao: aplicacao,
@@ -28,6 +28,20 @@ export class ServicoResolver{
             }    
         let aux = await this.repository.findByParam(param);
         return aux;
+    }
+   
+    @Query( ()=> Servico, { name: "servico"})
+    async findServico(@Args(){ aplicacao,ativo,codigo,data_recadastro }:ServicoArgs ){
+            let param:ServicoArgs = { 
+                aplicacao: aplicacao,
+                ativo:ativo,
+                codigo:codigo,
+                 data_recadastro:data_recadastro
+            }    
+        let arrResult = await this.repository.findByParam(param);
+        let resultService = arrResult[0] 
+        return  resultService;
+        
     }
 
      

@@ -1,22 +1,21 @@
 import { ResultSetHeader } from "mysql2";
 import { conn } from "../../database/dataBaseConfig";
-import { CategoriaArgs } from "../../dtos/args/categoria-args";
-import { Categoria } from "../../dtos/models/categoria/categoria-model";
-import { CreateCategoriaInput } from "../../dtos/inputs/categoria/create-categorias";
-import { UpdateCategoriaInput } from "../../dtos/inputs/categoria/update-categorias";
+import { MarcasArgs } from "../../dtos/args/marca-args";
+import { CreateMarcasInput } from "../../dtos/inputs/marca/create-marcas";
+import { UpdateMarcasInput } from "../../dtos/inputs/marca/update-marcas";
 
-export class CategoriaRepository{
+export class MarcasRepository{
  
     dbName = `\`${57473685000100}\``;
 
-        async findByParam(param: Partial<CategoriaArgs>): Promise<any[]> {
+        async findByParam(param: Partial<MarcasArgs>): Promise<any[]> {
             return new Promise((resolve, reject) => {
     
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias `
+                FROM ${this.dbName}.marcas `
     
                 let conditions = [];
                 let valueParamSql = [];
@@ -56,7 +55,7 @@ export class CategoriaRepository{
     
                 conn.query(finalSql, valueParamSql, (err:any, result:  any[]) => {
                     if (err) {
-                        console.log("erro ao consultar as categorias ", err);
+                        console.log("erro ao consultar as marcas ", err);
                         reject(err)
                     } else {
                         resolve(result)
@@ -66,17 +65,17 @@ export class CategoriaRepository{
     
             })
         }
-      async findByCode(code: number): Promise<Categoria[]> {
+      async findByCode(code: number): Promise<MarcasArgs[]> {
             return new Promise((resolve, reject) => {
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias WHERE codigo = ? 
+                FROM ${this.dbName}.marcas WHERE codigo = ? 
                 `
-                conn.query(sql, code, (err, result: Categoria[] | any) => {
+                conn.query(sql, code, (err, result: MarcasArgs[] | any) => {
                     if (err) {
-                        console.log("erro ao consultar as categorias ", err);
+                        console.log("erro ao consultar as marcas ", err);
                         reject(err)
                     } else {
                         resolve(result)
@@ -88,13 +87,13 @@ export class CategoriaRepository{
         }
 
 
-           async create(categoria : CreateCategoriaInput): Promise<ResultSetHeader> {
+           async create(categoria : CreateMarcasInput): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
 
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.categorias
+                 ${this.dbName}.marcas
                       (   
                         id,
                         descricao,
@@ -114,10 +113,10 @@ export class CategoriaRepository{
                 })
             }
         
-            async update(categoria: UpdateCategoriaInput ):Promise<ResultSetHeader>{
+            async update(categoria: UpdateMarcasInput ):Promise<ResultSetHeader>{
         
                 return new Promise((resolve, reject ) =>{
-                    let sql = `UPDATE ${this.dbName}.categorias SET 
+                    let sql = `UPDATE ${this.dbName}.marcas SET 
                     ` 
         
                     let conditions=[];
@@ -152,7 +151,7 @@ export class CategoriaRepository{
                             if(err){
                                 reject(err)
                             }else{
-                                console.log("categoria alterada com sucesso")
+                                console.log("marca  alterada com sucesso")
                                 resolve(result)
                             }
                         })

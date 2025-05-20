@@ -1,22 +1,22 @@
 import { ResultSetHeader } from "mysql2";
 import { conn } from "../../database/dataBaseConfig";
-import { CategoriaArgs } from "../../dtos/args/categoria-args";
-import { Categoria } from "../../dtos/models/categoria/categoria-model";
-import { CreateCategoriaInput } from "../../dtos/inputs/categoria/create-categorias";
-import { UpdateCategoriaInput } from "../../dtos/inputs/categoria/update-categorias";
+import { FormaPagamentoArgs } from "../../dtos/args/forma_pagamento-args";
+import { FormaPagamento } from "../../dtos/models/forma_pagamento/forma_pagamento-model";
+import { CreateFormaPagamentoInput } from "../../dtos/inputs/forma_pagamento/create-fpgt-input";
+import { UpdateFormaPagamentoInput } from "../../dtos/inputs/forma_pagamento/update-fpgt-input";
 
-export class CategoriaRepository{
+export class formaPagamentoRepository{
  
     dbName = `\`${57473685000100}\``;
 
-        async findByParam(param: Partial<CategoriaArgs>): Promise<any[]> {
+        async findByParam(param: Partial<FormaPagamentoArgs>): Promise<any[]> {
             return new Promise((resolve, reject) => {
     
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias `
+                FROM ${this.dbName}.forma_pagamento `
     
                 let conditions = [];
                 let valueParamSql = [];
@@ -39,7 +39,10 @@ export class CategoriaRepository{
                     conditions.push(" ativo = ? ")
                     valueParamSql.push(param.ativo);
                 }
-           
+                  if (param.ativo) {
+                    conditions.push(" parcelas = ? ")
+                    valueParamSql.push(param.parcelas);
+                }
              
                 if (param.data_recadastro) {
                     conditions.push(" data_recadastro > ? ")
@@ -56,7 +59,7 @@ export class CategoriaRepository{
     
                 conn.query(finalSql, valueParamSql, (err:any, result:  any[]) => {
                     if (err) {
-                        console.log("erro ao consultar as categorias ", err);
+                        console.log("erro ao consultar as formas de forma de pagamento ", err);
                         reject(err)
                     } else {
                         resolve(result)
@@ -66,17 +69,17 @@ export class CategoriaRepository{
     
             })
         }
-      async findByCode(code: number): Promise<Categoria[]> {
+      async findByCode(code: number): Promise<FormaPagamento[]> {
             return new Promise((resolve, reject) => {
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias WHERE codigo = ? 
+                FROM ${this.dbName}.forma_pagamento WHERE codigo = ? 
                 `
-                conn.query(sql, code, (err, result: Categoria[] | any) => {
+                conn.query(sql, code, (err, result: FormaPagamento[] | any) => {
                     if (err) {
-                        console.log("erro ao consultar as categorias ", err);
+                        console.log("erro ao consultar as forma_pagamento ", err);
                         reject(err)
                     } else {
                         resolve(result)
@@ -88,24 +91,28 @@ export class CategoriaRepository{
         }
 
 
-           async create(categoria : CreateCategoriaInput): Promise<ResultSetHeader> {
+           async create(fpgt : CreateFormaPagamentoInput): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
 
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.categorias
+                 ${this.dbName}.forma_pagamento
                       (   
                         id,
                         descricao,
+                        desc_maximo,
+                        parcelas,
+                        intervalo,
+                        recebimento,
                         data_cadastro ,
                         data_recadastro ,
                         ativo 
                        ) values
                         (
-                          ?, ?, ?, ?, ?  );
+                          ?, ?, ?, ?, ?, ?, ?, ?, ?  );
                     `
-                    const dados = [ categoria.id, categoria.descricao, categoria.data_cadastro, categoria.data_recadastro, categoria.ativo ]
+                    const dados = [ fpgt.id, fpgt.descricao,  fpgt.desc_maximo, fpgt.parcelas, fpgt.intervalo, fpgt.recebimento, fpgt.data_cadastro, fpgt.data_recadastro,fpgt.ativo ]
         
                     conn.query(sql, dados, (err: any, result: ResultSetHeader | any) => {
                         if (err) reject(err);
@@ -114,37 +121,69 @@ export class CategoriaRepository{
                 })
             }
         
-            async update(categoria: UpdateCategoriaInput ):Promise<ResultSetHeader>{
+            async update(fpgt: UpdateFormaPagamentoInput ):Promise<ResultSetHeader>{
         
                 return new Promise((resolve, reject ) =>{
-                    let sql = `UPDATE ${this.dbName}.categorias SET 
+                    let sql = `UPDATE ${this.dbName}.forma_pagamento SET 
                     ` 
         
                     let conditions=[];
                     let values =[];
         
-                    if( categoria.ativo){
-                        conditions.push(" ativo = ? ")
-                        values.push(categoria.ativo);
+
+
+                     if( fpgt.id){
+                        conditions.push(" id = ? ")
+                        values.push(fpgt.id)
+                     }
+                    
+                      if( fpgt.descricao){
+                        conditions.push(" descricao = ? ")
+                        values.push(fpgt.descricao)
                     }
                    
-                    if(categoria.data_cadastro){
+                     if( fpgt.desc_maximo){
+                        conditions.push(" desc_maximo = ? ")
+                        values.push(fpgt.desc_maximo)
+                    }
+                    if( fpgt.desc_maximo){
+                        conditions.push(" desc_maximo = ? ")
+                        values.push(fpgt.desc_maximo)
+                    }
+                    
+                    if( fpgt.parcelas){
+                        conditions.push(" parcelas = ? ")
+                        values.push(fpgt.parcelas)
+                    }
+
+                    if( fpgt.intervalo){
+                        conditions.push(" intervalo = ? ")
+                        values.push(fpgt.intervalo)
+                    }
+                    
+                    if( fpgt.recebimento){
+                        conditions.push(" recebimento = ? ")
+                        values.push(fpgt.recebimento)
+                    }
+
+                    if(fpgt.data_cadastro){
                         conditions.push(" data_cadastro")
-                        values.push(categoria.data_cadastro)
+                        values.push(fpgt.data_cadastro)
                     }   
-                    if( categoria.data_recadastro){
+                    if( fpgt.data_recadastro){
                         conditions.push(" data_recadastro = ? ")
-                        values.push(categoria.data_recadastro)
+                        values.push(fpgt.data_recadastro)
                     }
-                    if( categoria.descricao){
-                        conditions.push(" descricao = ? ")
-                        values.push(categoria.descricao)
+                  if( fpgt.ativo){
+                        conditions.push(" ativo = ? ")
+                        values.push(fpgt.ativo);
                     }
+                   
                      
                         
                     conditions.join(' , ')
                     
-                    values.push(categoria.codigo)
+                    values.push(fpgt.codigo)
                     let finalSql =  sql + conditions + " WHERE codigo = ? "
         
         
@@ -152,7 +191,7 @@ export class CategoriaRepository{
                             if(err){
                                 reject(err)
                             }else{
-                                console.log("categoria alterada com sucesso")
+                                console.log("forma de pagamento  alterada com sucesso")
                                 resolve(result)
                             }
                         })

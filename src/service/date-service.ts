@@ -67,6 +67,13 @@ export class DateService {
             return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundos}`;
         }
 
+      obterDataAtualSemHoras() {
+        const dataAtual = new Date();
+        const dia = String(dataAtual.getDate()).padStart(2, '0');
+        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+        const ano = dataAtual.getFullYear();
+        return `${ano}-${mes}-${dia} 00:00:00`;
+    }
 
           isValidDateFormat(dateString: string): boolean {
             if (!dateString) return false; // Evita erros com strings vazias/nulas

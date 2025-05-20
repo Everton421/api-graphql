@@ -1,7 +1,8 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
 import { ClientePedido } from "../cliente/clientePedido-model";
-import { produtoPedido } from "../produtos-pedido/ProdutosPedido-model";
-
+import { ProdutoPedido } from "../produtos-pedido/produto-pedido-model";
+import { ServicoPedido } from "../servicos-pedido/servico-pedido-model";
+ 
 
 @ObjectType()
 export class Pedido{
@@ -11,9 +12,11 @@ export class Pedido{
     @Field(()=> ClientePedido)
     cliente:ClientePedido
     
-    @Field(()=> [produtoPedido], {nullable:true})
-    produtos: produtoPedido[]
-    
+    @Field(()=> [ProdutoPedido], {nullable:true})
+    produtos: ProdutoPedido[]
+    @Field(()=>[ ServicoPedido], { nullable: true })
+    servicos : ServicoPedido[]
+
     @Field(()=> Int,{nullable:true})
     id:number
     

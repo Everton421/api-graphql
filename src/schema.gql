@@ -193,8 +193,9 @@ type Pedido {
   forma_pagamento: Int
   id: Int
   observacoes: String
-  produtos: [produtoPedido!]
+  produtos: [ProdutoPedido!]
   quantidade_parcelas: Int
+  servicos: [ServicoPedido!]
   situacao: String
   tipo: Int
   tipo_os: Int
@@ -226,6 +227,15 @@ type Produto {
   preco: Float!
   sku: String!
   tipo: Float!
+}
+
+type ProdutoPedido {
+  codigo: Int!
+  desconto: Float!
+  descricao: String!
+  preco: Float!
+  quantidade: Float!
+  total: Float!
 }
 
 type Query {
@@ -286,6 +296,15 @@ type Servico {
   data_recadastro: String!
   id: Float!
   tipo_serv: Float!
+  valor: Float!
+}
+
+type ServicoPedido {
+  aplicacao: String!
+  codigo: Int!
+  desconto: Float!
+  quantidade: Float!
+  total: Float!
   valor: Float!
 }
 
@@ -421,10 +440,4 @@ type Veiculo {
   marca: String!
   modelo: String!
   placa: String!
-}
-
-type produtoPedido {
-  codigo: Int!
-  preco: Float!
-  quantidade: Float!
 }

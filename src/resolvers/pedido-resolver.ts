@@ -1,15 +1,39 @@
 import { Query, Resolver } from "type-graphql";
 import { Pedido } from "../dtos/models/pedido/pedido/pedido-model";
+import { ProdutoPedido } from "../dtos/models/pedido/produtos-pedido/produto-pedido-model";
+import { ServicoPedido } from "../dtos/models/pedido/servicos-pedido/servico-pedido-model";
 
 
 @Resolver(()=> Pedido)
 export class PedidoResolver{
     
+    arrProduto:ProdutoPedido[] = [
+        {
+            codigo:1,
+            preco:10.5,
+            quantidade:2,
+            desconto:0,
+            descricao:"teste",
+            total:10
+        }
+    ]
+    arrServico:ServicoPedido[] =[
+            {
+                aplicacao:"teste",   
+                codigo:1,
+                valor:10,
+                desconto:0,
+                quantidade:1,
+                total:10
+            }
+        ]
+
     pedidoFic: Pedido  =
      {
         cliente:{ codigo:1, nome:'cliente teste'},
         codigo:52156,
-        produtos: [ { codigo:1, preco:10.0, quantidade:1}],
+        produtos:  this.arrProduto ,
+        servicos: this.arrServico,
          data_cadastro:'',
          data_recadastro:'',
          descontos:0,

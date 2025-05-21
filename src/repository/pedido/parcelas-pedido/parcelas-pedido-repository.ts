@@ -1,11 +1,12 @@
 import { conn } from "../../../database/dataBaseConfig";
+import { InsertParcelasPedidoInput } from "../../../dtos/inputs/pedido/parcelas/insert-parcelas-pedido-input";
 
 export class ParcelasPedidoRepository{
 
-    async   buscaParcelasDoOrcamento(empresa:any,codigo: number) {
-            return new Promise( async (resolve, reject) => {
+    async   finaAll(empresa:any,codigo: number) {
+            return new Promise(   (resolve, reject) => {
                 const sql = ` select *,  DATE_FORMAT(vencimento, '%Y-%m-%d') AS vencimento   from ${empresa}.parcelas where pedido = ? `
-             await   conn.query(sql, [codigo], async (err:any, result:any) => {
+                 conn.query(sql, [codigo],   (err:any, result:any) => {
                     if (err) {
                         reject(err);
                     } else {
@@ -15,5 +16,30 @@ export class ParcelasPedidoRepository{
             })
         }
 
-
+    async insert(parcelas:InsertParcelasPedidoInput[],empresa:any, codigoPedido:any){
+      return new Promise( async (resolve, reject )=>{
+      parcelas.forEach( async (p: any) => {
+          
+      let {
+          pedido ,  parcela ,  valor ,vencimento  
+      } = p     
+          
+          let sql = `  INSERT INTO ${empresa}.parcelas ( pedido ,  parcela ,  valor, vencimento ) VALUES ( ?  , ?,  ?, ?  )`;
+          let dados = [ codigoPedido ,  parcela ,  valor ,vencimento ]
+  
+  
+            await   conn.query( sql,  dados , (err: any, resultParcelas:any) => {
+                    if (err) {
+                        console.log("erro ao inserir parcelas !" + err)
+                        
+                    } else {
+                        console.log('  Parcela inserida com sucesso '    )
+                        resolve(codigoPedido)
+                    }
+                }
+            )
+        })
+      })
+  
+    }
     }

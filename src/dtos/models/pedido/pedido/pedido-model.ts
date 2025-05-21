@@ -2,11 +2,13 @@ import { Field, Float, Int, ObjectType } from "type-graphql";
 import { ClientePedido } from "../cliente/clientePedido-model";
 import { ProdutoPedido } from "../produtos-pedido/produto-pedido-model";
 import { ServicoPedido } from "../servicos-pedido/servico-pedido-model";
+import { BigInt } from "graphql-scalars/typings/typeDefs";
+import { ParcelasPedido } from "../parcelas/parcelas-pedidos-model";
  
 
 @ObjectType()
 export class Pedido{
-    @Field(()=> Int)
+    @Field()
     codigo:number
     
     @Field(()=> ClientePedido)
@@ -14,8 +16,12 @@ export class Pedido{
     
     @Field(()=> [ProdutoPedido], {nullable:true})
     produtos: ProdutoPedido[]
+
     @Field(()=>[ ServicoPedido], { nullable: true })
     servicos : ServicoPedido[]
+
+        @Field(()=>[ParcelasPedido])
+        parcelas:ParcelasPedido[]
 
     @Field(()=> Int,{nullable:true})
     id:number

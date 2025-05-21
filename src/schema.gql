@@ -182,9 +182,16 @@ type Mutation {
   updateVeiculo(dados: UpdateVeiculoInput!): Veiculo!
 }
 
+type ParcelasPedido {
+  parcela: Float!
+  pedido: Float!
+  valor: Float!
+  vencimento: String!
+}
+
 type Pedido {
   cliente: ClientePedido!
-  codigo: Int!
+  codigo: Float!
   contato: String
   data_cadastro: String!
   data_recadastro: String!
@@ -193,6 +200,7 @@ type Pedido {
   forma_pagamento: Int
   id: Int
   observacoes: String
+  parcelas: [ParcelasPedido!]!
   produtos: [ProdutoPedido!]
   quantidade_parcelas: Int
   servicos: [ServicoPedido!]
@@ -277,7 +285,36 @@ type Query {
   """ Filtra somente uma forma de pagamento"""
   formaPagamento(ativo: Int!, codigo: Int!, data_cadastro: String!, data_recadastro: Int!, desc_maximo: Int!, descricao: String!, id: Int!, intervalo: Int!, parcelas: Int!, recebimento: Int!): FormaPagamento!
   formasPagamento(ativo: Int!, codigo: Int!, data_cadastro: String!, data_recadastro: Int!, desc_maximo: Int!, descricao: String!, id: Int!, intervalo: Int!, parcelas: Int!, recebimento: Int!): [FormaPagamento!]!
-  getPedidos: Pedido!
+  getPedido(
+    """ Codigo do Cliente Vinculado ao Pedido"""
+    cliente: Int
+
+    """ Filtra os Pedido igual ou após esta data """
+    data_recadastro: String
+
+    """ Consulta o Pedido com base no nome do cliente"""
+    nome: String
+
+    """ Codigo do referente ao tipo de pedido Codigo 1: Pedido de Venda - Codigo 3: Órdem de Servico  
+    """
+    tipo: Float
+    vendedor: Int
+  ): Pedido!
+  getPedidos(
+    """ Codigo do Cliente Vinculado ao Pedido"""
+    cliente: Int
+
+    """ Filtra os Pedido igual ou após esta data """
+    data_recadastro: String
+
+    """ Consulta o Pedido com base no nome do cliente"""
+    nome: String
+
+    """ Codigo do referente ao tipo de pedido Codigo 1: Pedido de Venda - Codigo 3: Órdem de Servico  
+    """
+    tipo: Float
+    vendedor: Int
+  ): [Pedido!]!
   produto(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): Produto!
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
   servico(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): Servico!

@@ -5,7 +5,6 @@ import { ClienteRepository } from "../repository/cliente/cliente-repository";
 import { CreateClienteInput } from "../dtos/inputs/cliente/create-cliente-input";
 import { DateService } from "../service/date-service";
 import { UpdateClienteInput } from "../dtos/inputs/cliente/update-cliente-input";
-import { GraphQLError } from "graphql";
 
 
 @Resolver (()=> Cliente)

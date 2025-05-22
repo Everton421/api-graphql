@@ -21,7 +21,7 @@ import { InsertServicosPedidoInput } from "../../../dtos/inputs/pedido/servicos-
         }
    
         
-    async insert( servicos:InsertServicosPedidoInput[],   empresa:any ){
+    async insert(  empresa:any,servicos:InsertServicosPedidoInput[],  ){
          
         return new Promise(   (resolve, reject )=>{
   
@@ -60,7 +60,8 @@ import { InsertServicosPedidoInput } from "../../../dtos/inputs/pedido/servicos-
                   }
                   i++;
             
-            } }
+            } 
+        }
           })
   }
 

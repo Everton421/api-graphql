@@ -2,7 +2,9 @@ import { Field, Float, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class ServicoPedido{
-    
+      @Field()
+        pedido:number
+
       @Field(()=>Int)
       codigo:number
       

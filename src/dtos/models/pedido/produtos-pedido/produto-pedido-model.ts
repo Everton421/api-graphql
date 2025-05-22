@@ -3,6 +3,9 @@ import { Field, Float, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class ProdutoPedido{
+    @Field()
+    pedido:number
+
     @Field(()=>Int)
     codigo:number
     
@@ -18,6 +21,6 @@ export class ProdutoPedido{
     @Field(()=> Float)
     total:number
     
-    @Field()
+    @Field({nullable:true})
     descricao:string
 }

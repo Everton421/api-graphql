@@ -36,6 +36,11 @@ type ClientePedido {
   nome: String!
 }
 
+input ClientePedidoInput {
+  codigo: Int!
+  nome: String!
+}
+
 input CreateCategoriaInput {
   ativo: String
   data_cadastro: String
@@ -154,6 +159,58 @@ type FormaPagamento {
   recebimento: Int!
 }
 
+input InsertCompletePedidoInput {
+  cliente: ClientePedidoInput!
+  codigo: Float!
+  contato: String!
+  data_cadastro: String!
+  data_recadastro: String!
+  descontos: Float!
+  enviado: String!
+  forma_pagamento: Float!
+  id: Int
+  observacoes: String!
+  parcelas: [InsertParcelasPedidoInput!]
+  produtos: [InsertProdutosPedidoInput!]
+  quantidade_parcelas: Int!
+  servicos: [InsertServicosPedidoInput!]
+  situacao: String!
+  tipo: Int!
+  tipo_os: Int!
+  total_geral: Float!
+  total_produtos: Float!
+  total_servicos: Float!
+  veiculo: Int!
+  vendedor: Int!
+}
+
+input InsertParcelasPedidoInput {
+  parcela: Int!
+  pedido: Float!
+  valor: Float!
+  vencimento: String!
+}
+
+input InsertProdutosPedidoInput {
+  codigo: Int!
+  desconto: Float!
+  descricao: String
+  pedido: Float!
+  preco: Float!
+  quantidade: Int!
+  total: Float!
+}
+
+input InsertServicosPedidoInput {
+  aplicacao: String
+  codigo: Int!
+  desconto: Float!
+  pedido: Float!
+  quantidade: Int!
+  total: Float!
+  valor: Float!
+}
+
 type Marca {
   ativo: String
   codigo: Int!
@@ -171,6 +228,7 @@ type Mutation {
   createCategoria(dados: CreateCategoriaInput!): Categoria!
   createCliente(dados: CreateClienteInput!): Cliente!
   createMarca(dados: CreateMarcasInput!): Marca!
+  createPedido(dados: InsertCompletePedidoInput!): Pedido!
   createProduto(dados: CreateProdutoInput!): Produto!
   createTipoOs(dados: CreateTiposOsInput!): TiposOs!
   createVeiculo(dados: CreateVeiculoInput!): Veiculo!
@@ -240,7 +298,8 @@ type Produto {
 type ProdutoPedido {
   codigo: Int!
   desconto: Float!
-  descricao: String!
+  descricao: String
+  pedido: Float!
   preco: Float!
   quantidade: Float!
   total: Float!
@@ -340,6 +399,7 @@ type ServicoPedido {
   aplicacao: String!
   codigo: Int!
   desconto: Float!
+  pedido: Float!
   quantidade: Float!
   total: Float!
   valor: Float!

@@ -11,17 +11,18 @@ export class InsertProdutosPedidoInput{
         @Field(()=>Int)
          codigo:number
          
+         @Field(()=>Int)
+         quantidade:number
+
         @Field(()=> Float)
          desconto:number
-
-        @Field(()=>Int)
-         quantidade:number
 
          @Field(()=> Float)
          preco:number
     
-     
         @Field(()=> Float)
          total:number
+         @Field( { nullable:true } )
+         descricao:string
         
 }

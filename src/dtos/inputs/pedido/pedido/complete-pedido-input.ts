@@ -1,10 +1,14 @@
 import { Field, InputType, Int } from "type-graphql"
 import { ClientePedido } from "../../../models/pedido/cliente/clientePedido-model"
+import { InsertProdutosPedidoInput } from "../produtos-pedido/insert-produtos-pedido-input"
+import { InsertServicosPedidoInput } from "../servicos-pedido/insert-servicos-pedido-input"
+import { InsertParcelasPedidoInput } from "../parcelas/insert-parcelas-pedido-input"
+import { ClientePedidoInput } from "../cliente-pedido/cliente-pedido-input"
 
 
 
 @InputType()
-export class InsertPedidoInput {
+export class InsertCompletePedidoInput {
 
 
    @Field()
@@ -40,10 +44,7 @@ export class InsertPedidoInput {
    @Field()
    total_servicos: number
 
-   @Field(() => ClientePedido)
-   cliente: ClientePedido
-
-
+  
    @Field(() => Int)
    veiculo: number
 
@@ -64,6 +65,18 @@ export class InsertPedidoInput {
 
    @Field()
    observacoes: string
+
+   @Field(()=> [InsertProdutosPedidoInput] ,{ nullable:true})
+   produtos:InsertProdutosPedidoInput[]
+
+   @Field(()=> [InsertServicosPedidoInput], { nullable:true} )
+   servicos:InsertServicosPedidoInput[]
+
+   @Field(()=> [InsertParcelasPedidoInput] , { nullable:true})
+    parcelas:InsertParcelasPedidoInput[]
+
+  @Field(() => ClientePedidoInput)
+   cliente:  ClientePedidoInput
 
 
 }

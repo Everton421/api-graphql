@@ -16,29 +16,33 @@ export class ParcelasPedidoRepository{
             })
         }
 
-    async insert(parcelas:InsertParcelasPedidoInput[],empresa:any, codigoPedido:any){
-      return new Promise( async (resolve, reject )=>{
-      parcelas.forEach( async (p: any) => {
-          
-      let {
-          pedido ,  parcela ,  valor ,vencimento  
-      } = p     
+    async insert(empresa:any,  parcelas:InsertParcelasPedidoInput[], codigoPedido:any){
+      return new Promise(   (resolve, reject )=>{
+            for(let p of parcelas){
+                let i = 1;
+
+               let {  parcela ,  valor ,vencimento    } = p     
           
           let sql = `  INSERT INTO ${empresa}.parcelas ( pedido ,  parcela ,  valor, vencimento ) VALUES ( ?  , ?,  ?, ?  )`;
           let dados = [ codigoPedido ,  parcela ,  valor ,vencimento ]
   
-  
-            await   conn.query( sql,  dados , (err: any, resultParcelas:any) => {
-                    if (err) {
-                        console.log("erro ao inserir parcelas !" + err)
-                        
-                    } else {
-                        console.log('  Parcela inserida com sucesso '    )
-                        resolve(codigoPedido)
+                    conn.query( sql,  dados , (err: any, resultParcelas:any) => {
+                        if (err) {
+                            console.log( "erro ao inserir parcelas !" + err)
+                            
+                        } else {
+                            console.log('  Parcela inserida com sucesso '    )
+                            resolve(codigoPedido)
+                        }
                     }
-                }
-            )
-        })
+                )
+
+                  if(i === parcelas.length){
+                           return;
+                      }
+                   i++;
+            }
+ 
       })
   
     }

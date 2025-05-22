@@ -1,3 +1,4 @@
+import { ResultSetHeader } from "mysql2";
 import { conn } from "../../../database/dataBaseConfig";
 import { InsertProdutosPedidoInput } from "../../../dtos/inputs/pedido/produtos-pedido/insert-produtos-pedido-input";
 
@@ -21,9 +22,9 @@ export class ProdutosPedidoRepository{
             })
         }
 
-     async insertProducts(empresa:any, produtos:InsertProdutosPedidoInput[] ,codigo: number) {
+     async insertProducts(empresa:any, produtos:InsertProdutosPedidoInput[] ):Promise<ResultSetHeader> {
 
-       return new Promise( async (resolve, reject )=>{
+       return new Promise(   (resolve, reject )=>{
   
             let i=1;
             for(let p of produtos){
@@ -45,12 +46,12 @@ export class ProdutosPedidoRepository{
   
              const sql =  ` INSERT INTO ${empresa}.produtos_pedido ( pedido ,  codigo ,  desconto ,  quantidade ,  preco ,  total ) VALUES (? , ?, ?, ?, ?, ?) `;
                 let dados = [ pedido, codigo, desconto, quantidade, preco, total ]
-              await conn.query( sql,dados ,(error:any, resultado:any)=>{
+                conn.query( sql,dados ,(error:any, resultado:ResultSetHeader)=>{
                    if(error){
                            reject(" erro ao inserir produto do orcamento "+ error);
                    }else{
-                    resolve(resultado)
                        console.log(`produto  inserido com sucesso`);
+                    resolve(resultado)
                    }
                 })
   

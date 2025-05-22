@@ -23,5 +23,10 @@ export class InsertServicosPedidoInput{
      
         @Field(()=> Float)
          total:number
+
+      @Field({nullable:true})
+      aplicacao:string
+
+
         
 }

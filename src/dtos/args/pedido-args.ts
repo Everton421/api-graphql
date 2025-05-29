@@ -1,8 +1,12 @@
+import { notEqual } from "assert";
 import { ArgsType, Field, Int } from "type-graphql";
 
 
 @ArgsType()
 export class PedidoArgs{
+
+        @Field( { nullable:true, description: " Filtra pelo codigo do pedido"} )
+        codigo:number
 
         @Field (   {  nullable:true, description: " Filtra os Pedido igual ou após esta data "})
         data_recadastro:string

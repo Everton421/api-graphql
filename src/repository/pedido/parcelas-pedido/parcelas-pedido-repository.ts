@@ -1,12 +1,25 @@
+import { QueryError } from "mysql2";
 import { conn } from "../../../database/dataBaseConfig";
 import { InsertParcelasPedidoInput } from "../../../dtos/inputs/pedido/parcelas/insert-parcelas-pedido-input";
+import { ParcelasPedido } from "../../../dtos/models/pedido/parcelas/parcelas-pedidos-model";
+
+
+type ResultSetHeader = {
+  fieldCount: number,
+  affectedRows: number,
+  insertId: number,
+  info: string,
+  serverStatus: number,
+  warningStatus: number,
+} 
+
 
 export class ParcelasPedidoRepository{
 
-    async   finaAll(empresa:any,codigo: number) {
+    async   findAll(empresa:any,codigo: number):Promise<ParcelasPedido[]> {
             return new Promise(   (resolve, reject) => {
                 const sql = ` select *,  DATE_FORMAT(vencimento, '%Y-%m-%d') AS vencimento   from ${empresa}.parcelas where pedido = ? `
-                 conn.query(sql, [codigo],   (err:any, result:any) => {
+                 conn.query(sql, [codigo],   (err: QueryError | null , result:ParcelasPedido[] | any) => {
                     if (err) {
                         reject(err);
                     } else {
@@ -16,7 +29,24 @@ export class ParcelasPedidoRepository{
             })
         }
 
-    async insert(empresa:any,  parcelas:InsertParcelasPedidoInput[], codigoPedido:any){
+   async   deleteParcelasPedido( empresa:any, codigo: number):Promise<ResultSetHeader |  QueryError > {
+              return new Promise(  (resolve, reject) => {
+      
+                  let sql2 = ` delete from ${empresa}.parcelas
+                                          where pedido = ${codigo}
+                                      `
+                   conn.query(sql2, (err: QueryError, result:ResultSetHeader) => {
+                      if (err) {
+                          reject(err);
+                      } else {
+                          resolve(result);
+                      }
+                  })
+              })
+      
+          }
+
+    async insert(empresa:any,  parcelas:InsertParcelasPedidoInput[], codigoPedido:any) :Promise<ResultSetHeader >{
       return new Promise(   (resolve, reject )=>{
             for(let p of parcelas){
                 let i = 1;
@@ -26,13 +56,13 @@ export class ParcelasPedidoRepository{
           let sql = `  INSERT INTO ${empresa}.parcelas ( pedido ,  parcela ,  valor, vencimento ) VALUES ( ?  , ?,  ?, ?  )`;
           let dados = [ codigoPedido ,  parcela ,  valor ,vencimento ]
   
-                    conn.query( sql,  dados , (err: any, resultParcelas:any) => {
+                    conn.query( sql,  dados , (err: QueryError |  any, resultParcelas: ResultSetHeader | any   ) => {
                         if (err) {
                             console.log( "erro ao inserir parcelas !" + err)
                             
                         } else {
                             console.log('  Parcela inserida com sucesso '    )
-                            resolve(codigoPedido)
+                            resolve(resultParcelas)
                         }
                     }
                 )

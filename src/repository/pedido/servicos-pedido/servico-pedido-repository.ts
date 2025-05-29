@@ -1,16 +1,32 @@
+import { QueryError } from "mysql2";
 import { conn } from "../../../database/dataBaseConfig";
 import { InsertServicosPedidoInput } from "../../../dtos/inputs/pedido/servicos-pedido/insert-servicos-pedido-input";
+import { ServicoPedido } from "../../../dtos/models/pedido/servicos-pedido/servico-pedido-model";
+
+
+
+type ResultSetHeader = {
+  fieldCount: number,
+  affectedRows: number,
+  insertId: number,
+  info: string,
+  serverStatus: number,
+  warningStatus: number,
+  changedRows: number
+}
+
+
 
   export class ServicoPedidoRepository{
 
    
-        async   findServices( empresa:any,codigo: number) {
+        async   findServices( empresa:any,codigo: number) :Promise<ServicoPedido[]>{
             return new Promise(   (resolve, reject) => {
                 const sql = ` select 
                 sp.*, s.aplicacao  from ${empresa}.servicos_pedido sp 
                 join ${empresa}.servicos s on s.codigo = sp.codigo
                 where sp.pedido = ? `
-                conn.query(sql, [codigo],   (err:any, result:any) => {
+                conn.query(sql, [codigo],   (err:any, result:ServicoPedido[] | any) => {
                     if (err) {
                         reject(err);
                     } else {
@@ -21,7 +37,7 @@ import { InsertServicosPedidoInput } from "../../../dtos/inputs/pedido/servicos-
         }
    
         
-    async insert(  empresa:any,servicos:InsertServicosPedidoInput[],  ){
+    async insert(  empresa:any,servicos:InsertServicosPedidoInput[], pedido:number ):Promise<ResultSetHeader>{
          
         return new Promise(   (resolve, reject )=>{
   
@@ -29,8 +45,7 @@ import { InsertServicosPedidoInput } from "../../../dtos/inputs/pedido/servicos-
               let i=1;
               for(let s of servicos){
                   let {
-                    pedido,
-                      codigo,
+                   codigo,
                       valor,
                       quantidade,
                       desconto,
@@ -45,7 +60,7 @@ import { InsertServicosPedidoInput } from "../../../dtos/inputs/pedido/servicos-
                 const sql =  ` INSERT INTO    ${empresa}.servicos_pedido  ( pedido ,  codigo ,  desconto ,  quantidade ,  valor ,  total ) VALUES ( ?, ?, ?, ?, ?, ?)   `;
   
                   let dados = [ pedido ,  codigo ,  desconto ,  quantidade ,  valor ,  total  ]
-                  conn.query( sql,dados ,(error:any, resultado:any)=>{
+                  conn.query( sql,dados ,(error:any, resultado:ResultSetHeader | any)=>{
                      if(error){
                       console.log(" erro ao inserir servico do orcamento "+ error)
                              reject(" erro ao inserir servico do orcamento "+ error);
@@ -64,5 +79,21 @@ import { InsertServicosPedidoInput } from "../../../dtos/inputs/pedido/servicos-
         }
           })
   }
+      async   deleteServicosPedido( empresa:any, codigo: number):Promise<ResultSetHeader |  QueryError > {
+              return new Promise(  (resolve, reject) => {
+      
+                  let sql2 = ` delete from ${empresa}.servicos_pedido
+                                          where pedido = ${codigo}
+                                      `
+                   conn.query(sql2, (err: QueryError, result:ResultSetHeader) => {
+                      if (err) {
+                          reject(err);
+                      } else {
+                          resolve(result);
+                      }
+                  })
+              })
+      
+          }
 
   }

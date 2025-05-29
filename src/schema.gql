@@ -38,7 +38,7 @@ type ClientePedido {
 
 input ClientePedidoInput {
   codigo: Int!
-  nome: String!
+  nome: String
 }
 
 input CreateCategoriaInput {
@@ -162,25 +162,25 @@ type FormaPagamento {
 input InsertCompletePedidoInput {
   cliente: ClientePedidoInput!
   codigo: Float!
-  contato: String!
-  data_cadastro: String!
-  data_recadastro: String!
-  descontos: Float!
-  enviado: String!
-  forma_pagamento: Float!
+  contato: String
+  data_cadastro: String
+  data_recadastro: String
+  descontos: Float
+  enviado: String
+  forma_pagamento: Float
   id: Int
-  observacoes: String!
+  observacoes: String
   parcelas: [InsertParcelasPedidoInput!]
   produtos: [InsertProdutosPedidoInput!]
   quantidade_parcelas: Int!
   servicos: [InsertServicosPedidoInput!]
-  situacao: String!
-  tipo: Int!
-  tipo_os: Int!
-  total_geral: Float!
-  total_produtos: Float!
-  total_servicos: Float!
-  veiculo: Int!
+  situacao: String
+  tipo: Int
+  tipo_os: Int
+  total_geral: Float
+  total_produtos: Float
+  total_servicos: Float
+  veiculo: Int
   vendedor: Int!
 }
 
@@ -235,6 +235,7 @@ type Mutation {
   updateCategoria(dados: UpdateCategoriaInput!): Categoria!
   updateCliente(dados: UpdateClienteInput!): Cliente!
   updateMarca(dados: UpdateMarcasInput!): Marca!
+  updatePedido(dados: InsertCompletePedidoInput!): Pedido!
   updateProduto(dados: UpdateProdutoInput!): Produto!
   updateTipoOs(dados: UpdateTiposOsInput!): TiposOs!
   updateVeiculo(dados: UpdateVeiculoInput!): Veiculo!
@@ -348,6 +349,9 @@ type Query {
     """ Codigo do Cliente Vinculado ao Pedido"""
     cliente: Int
 
+    """ Filtra pelo codigo do pedido"""
+    codigo: Float
+
     """ Filtra os Pedido igual ou após esta data """
     data_recadastro: String
 
@@ -362,6 +366,9 @@ type Query {
   getPedidos(
     """ Codigo do Cliente Vinculado ao Pedido"""
     cliente: Int
+
+    """ Filtra pelo codigo do pedido"""
+    codigo: Float
 
     """ Filtra os Pedido igual ou após esta data """
     data_recadastro: String

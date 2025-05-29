@@ -23,7 +23,7 @@ export class SelectPedidoRepository{
     parcelasRepository = new ParcelasPedidoRepository();
 
 
-     async findByparam(empresa:any ,param:PedidoArgs ):Promise<Pedido[]>{ 
+     async findByparam(empresa:any ,param:Partial<PedidoArgs> ):Promise<Pedido[]>{ 
 
         return new Promise(   ( resolve, reject )=>{
 
@@ -51,14 +51,18 @@ export class SelectPedidoRepository{
                 }
 
                 if (param.tipo) {
-                    conditions.push("p.tipo = ?");
+                    conditions.push(" p.tipo = ? ");
                     values.push(Number(param.tipo));
                 }
 
                 if (param.nome) {
-                    conditions.push("c.nome like  ?");
+                    conditions.push(" c.nome like  ? ");
                     values.push(`%${param.nome}%`);  
                 }
+                    if( param.codigo){
+                    conditions.push(" p.codigo = ? ");
+                    values.push(Number(param.codigo));
+                    }
 
                 let whereClause ='' 
                 let finalSql = sql 
@@ -73,13 +77,13 @@ export class SelectPedidoRepository{
                     console.log(err);
                     reject(err)
                 } else {
-            resolve(result)
-                }
+                   resolve(result)
+                      }
             })
     }) 
     }
 
-    async findComplete( empresa:any ,param:PedidoArgs ) :Promise<Pedido[] | any>{
+    async findComplete( empresa:any ,param: Partial< PedidoArgs> ) :Promise<Pedido[] | any>{
 
         try{
             const dadosPedidos:any[] = await this.findByparam(empresa, param )
@@ -103,7 +107,7 @@ export class SelectPedidoRepository{
                     }catch(e){ console.log(`erro ao tentar buscar o cliente do pedido`,e)}
 
                      try{
-                              parcelas = await this.parcelasRepository.finaAll(empresa, i.codigo);
+                              parcelas = await this.parcelasRepository.findAll(empresa, i.codigo);
                     }catch(e){ console.log(`erro ao tentar buscar as parcelas do pedido`,e)}
 
 
@@ -115,7 +119,7 @@ export class SelectPedidoRepository{
                     parcelas
                 }
             }))
-            console.log(pedidoRegistrados)
+          //  console.log(pedidoRegistrados)
             return pedidoRegistrados;
         }catch(e){
             console.log(`Erro ao obter dados do pedido `, e)

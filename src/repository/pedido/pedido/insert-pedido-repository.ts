@@ -55,24 +55,24 @@ export class InsertPedidoRepository{
                                 try{
                                     let resultTaleOrder = await this.insert(empresa, pedido)
                                     if( resultTaleOrder.affectedRows > 0 ){
-                                        if(produtos.length > 0 ){
+                                        if( produtos && produtos.length > 0 ){
                                             try{
-                                               let resultInsertProductsOrder = await this.produtosPedidoRepository.insertProducts(empresa,produtos)
+                                               let resultInsertProductsOrder = await this.produtosPedidoRepository.insertProducts(empresa, produtos, pedido.codigo)
                                             }catch(e){ 
                                                console.log(` Erro ao tentar registrar os produtos do pedido `,e)
                                                return;
                                              }
                                         }
-                                        if(servicos.length > 0 ){
+                                        if( servicos && servicos.length > 0 ){
                                             try{
-                                              let resultInsertServicesOrder = await this.servicosPedidoRepository.insert(empresa, servicos);
+                                              let resultInsertServicesOrder = await this.servicosPedidoRepository.insert(empresa, servicos, pedido.codigo);
                                            }catch(e){  return  console.log(` Erro ao tentar registrar os servicos do pedido ` )  }
                                         }
-
+                                        if( parcelas && parcelas.length > 0 ){
                                              try{
                                                let resultInsertParcelas  = await this.parcelasRepository.insert(empresa, parcelas, pedido.codigo);
                                              }catch(e){  return  console.log(` Erro ao tentar registrar as parcelas do pedido ` )  }
-
+                                            }
                                           resolve(pedido)
                                     } 
                                     

@@ -20,50 +20,50 @@ export class InsertCompletePedidoInput {
    @Field(() => Int)
    vendedor: number
 
-   @Field()
+   @Field({ nullable:true})
    situacao: string
 
-   @Field()
+   @Field({ nullable:true})
    contato: string
 
-   @Field()
+   @Field({ nullable:true})
    descontos: number
 
-   @Field()
+   @Field({ nullable:true})
    forma_pagamento: number
 
    @Field(() => Int)
    quantidade_parcelas: number
 
-   @Field()
+   @Field({ nullable:true})
    total_geral: number
 
-   @Field()
+   @Field({ nullable:true})
    total_produtos: number
 
-   @Field()
+   @Field({ nullable:true})
    total_servicos: number
 
   
-   @Field(() => Int)
+   @Field(() => Int,{ nullable:true})
    veiculo: number
 
-   @Field()
+   @Field({ nullable:true})
    data_cadastro: string
 
-   @Field()
+   @Field({ nullable:true})
    data_recadastro: string
 
-   @Field(() => Int)
+   @Field(() => Int,{ nullable:true})
    tipo_os: number
 
-   @Field()
+   @Field({ nullable:true})
    enviado: string
 
-   @Field(() => Int)
+   @Field(() => Int, { nullable:true})
    tipo: number
 
-   @Field()
+   @Field({ nullable:true})
    observacoes: string
 
    @Field(()=> [InsertProdutosPedidoInput] ,{ nullable:true})

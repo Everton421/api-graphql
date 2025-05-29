@@ -7,6 +7,6 @@ export class ClientePedidoInput{
     @Field(()=> Int)
     codigo:number
 
-    @Field()
+    @Field({ nullable:true })
     nome:string
 }

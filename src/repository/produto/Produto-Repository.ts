@@ -103,7 +103,12 @@ export class ProdutoRepository{
             valueParamSql.push( param.marca);
          }
 
-         if(param.num_fabricante){
+        if(param.ativo){
+                    conditions.push(" ativo = ? ")
+                    valueParamSql.push( param.ativo);
+                }
+         
+                if(param.num_fabricante){
             conditions.push(" num_fabricante = ?");
             valueParamSql.push(param.num_fabricante)
          }

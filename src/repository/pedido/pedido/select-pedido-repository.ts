@@ -67,7 +67,7 @@ export class SelectPedidoRepository{
                 let whereClause ='' 
                 let finalSql = sql 
                 if(conditions.length > 0 ){
-                    whereClause = " WHERE " + conditions.join(" AND ")
+                    whereClause = " WHERE " + conditions.join(" AND ") + ' GROUP BY p.codigo ORDER BY p.data_recadastro'
                 }
                 finalSql = sql + whereClause
 

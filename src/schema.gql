@@ -211,6 +211,16 @@ input InsertServicosPedidoInput {
   valor: Float!
 }
 
+type Login {
+  token: String!
+  user: User
+}
+
+input LoginInput {
+  email: String!
+  senha: String!
+}
+
 type Marca {
   ativo: String
   codigo: Int!
@@ -232,6 +242,7 @@ type Mutation {
   createProduto(dados: CreateProdutoInput!): Produto!
   createTipoOs(dados: CreateTiposOsInput!): TiposOs!
   createVeiculo(dados: CreateVeiculoInput!): Veiculo!
+  loginService(dados: LoginInput!): Login!
   updateCategoria(dados: UpdateCategoriaInput!): Categoria!
   updateCliente(dados: UpdateClienteInput!): Cliente!
   updateMarca(dados: UpdateMarcasInput!): Marca!
@@ -529,6 +540,11 @@ input UpdateVeiculoInput {
   marca: String
   modelo: String
   placa: String
+}
+
+type User {
+  codigo: Int!
+  nome: String!
 }
 
 type Veiculo {

@@ -11,11 +11,14 @@ import { VeiculoResolver } from "./resolvers/veiculo-resolver";
 import { FormaPagamentoResolver } from "./resolvers/forma-pagamento-resolver";
 import { MarcaResolver } from "./resolvers/marca-resolver";
 import { TiposOsResolver } from "./resolvers/tipos_os-resolver";
+import { LoginResolver } from "./resolvers/login-resolver";
 
 
 async function main(){
     const schema = await buildSchema({
-        resolvers: [ ClienteResolver ,VeiculoResolver, ProdutoResolver, PedidoResolver, ServicoResolver, CategoriaResolver,FormaPagamentoResolver, MarcaResolver, TiposOsResolver],
+        resolvers: [ ClienteResolver ,VeiculoResolver, ProdutoResolver, PedidoResolver, 
+                  ServicoResolver, CategoriaResolver,FormaPagamentoResolver, MarcaResolver,
+                    TiposOsResolver, LoginResolver],
         emitSchemaFile: path.resolve(__dirname, 'schema.gql')
     })
     

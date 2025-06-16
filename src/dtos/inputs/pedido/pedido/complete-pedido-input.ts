@@ -43,7 +43,6 @@ export class InsertCompletePedidoInput {
 
    @Field({ nullable:true})
    total_servicos: number
-
   
    @Field(() => Int,{ nullable:true})
    veiculo: number

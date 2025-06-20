@@ -2,40 +2,40 @@ import { Field, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class Veiculo{
-    @Field(()=> Int )   
+    @Field(()=> Int , { nullable:true})   
     codigo:number
 
-    @Field(()=> Int)   
+    @Field(()=> Int , { nullable:true} )   
     id:number
 
-    @Field(()=> Int)   
+    @Field(()=> Int , { nullable:true})   
     cliente:number
     
-    @Field()   
+    @Field(  { nullable:true})   
     placa:string
 
-    @Field()   
+    @Field( { nullable:true})   
     marca:string
 
-    @Field()   
+    @Field( { nullable:true})   
     modelo:string
     
-    @Field()   
+    @Field( { nullable:true})   
     ano:string
     
-    @Field()   
+    @Field( { nullable:true})   
     cor:string
     
-    @Field()   
+    @Field({ nullable:true})   
     combustivel:string
     
-    @Field()   
+    @Field( { nullable:true})   
     data_cadastro:string
     
-    @Field()   
+    @Field(  { nullable:true})   
     data_recadastro:string
     
-    @Field()   
+    @Field( { nullable:true})   
     ativo:string
 
 

@@ -1,7 +1,7 @@
 
 export interface UsuarioApi
 {
-codigo:number,
+codigo:number | string ,
 nome:string,
 email:string,
 cnpj:string,

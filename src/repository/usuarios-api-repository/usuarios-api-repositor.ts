@@ -1,6 +1,6 @@
 import { conn } from "../../database/dataBaseConfig";
 import { UsuarioApi } from "./IUsuarioApi";
-
+import  'dotenv/config'
 
 type ResultSetHeader = {
      fieldCount: number,
@@ -14,12 +14,11 @@ type ResultSetHeader = {
 
 export class UsuariosApiRepository{
 
-    db_api = 'db_api'
 
-            async insertUser(usuario:UsuarioApi){
+            async insertUser(usuario:UsuarioApi, db_api:string){
                 return new Promise(    (resolve, reject)=>{
                     let sql = `
-                        INSERT INTO ${this.db_api}.usuarios
+                        INSERT INTO ${db_api}.usuarios
                         (
                             nome, email, cnpj, senha, responsavel, telefone
                         ) values( ?, ?, ?, ? , ?, ? )
@@ -33,10 +32,10 @@ export class UsuariosApiRepository{
         }
 
 
-        async findByName(nome:string):Promise< UsuarioApi[] > {
+        async findByName(nome:string,  db_api:string):Promise< UsuarioApi[] > {
             return new Promise(    (resolve, reject)=>{
                 let sql = `
-                    select * from ${this.db_api}.usuarios where nome = ?
+                    select * from ${db_api}.usuarios where nome = ?
                 `;
 
                   conn.query(sql, [ nome ],(err:any, result:any )=>{ 
@@ -48,11 +47,11 @@ export class UsuariosApiRepository{
             })
     }
 
-    async findByEmail(email:string):Promise< UsuarioApi[] > {
+    async findByEmail(email:string,  db_api:string):Promise< UsuarioApi[] > {
         return new Promise< UsuarioApi[]>(    (resolve, reject)=>{
 
             let sql = `
-                select * from ${this.db_api}.usuarios where email ='${email}'
+                select * from ${db_api}.usuarios where email ='${email}'
             `;
 
               conn.query(sql,  (err:any, result:any )=>{ 
@@ -67,10 +66,10 @@ export class UsuariosApiRepository{
         })
     }
  
-    async findByEmailAndValidatorCode(email:string, codigoRecuperador:any) :Promise< UsuarioApi[] > {
+    async findByEmailAndValidatorCode(email:string, codigoRecuperador:any,  db_api:string) :Promise< UsuarioApi[] > {
         return new Promise< UsuarioApi[]>(    (resolve, reject)=>{
             let sql = `
-                select * from ${this.db_api}.usuarios where email = ? and cod_recuperador = ? 
+                select * from ${ db_api}.usuarios where email = ? and cod_recuperador = ? 
             `;
 
               conn.query(sql, [ email, codigoRecuperador  ],(err:any, result:any )=>{ 
@@ -82,10 +81,10 @@ export class UsuariosApiRepository{
         })
     }
 
-    async findByEmailPassword(email:string, senha:any):Promise< UsuarioApi[] > { 
+    async findByEmailPassword(email:string, senha:any,  db_api:string ):Promise< UsuarioApi[] > { 
         return new Promise< UsuarioApi[]>(    (resolve, reject)=>{
             let sql = `
-                select * from ${this.db_api}.usuarios where email = ? and senha = ? 
+                select * from ${db_api}.usuarios where email = ? and senha = ? 
             `;
 
               conn.query(sql, [ email, senha  ],(err:any, result:any )=>{ 
@@ -99,7 +98,7 @@ export class UsuariosApiRepository{
 
 
 
-      async updateByParam( user: UsuarioApi){
+      async updateByParam( user: UsuarioApi, db_api:string){
             return new Promise(( resolve, reject)=>{
 
             if( !user.codigo){
@@ -107,7 +106,7 @@ export class UsuariosApiRepository{
             return;
             }
 
-                let sql = ` update ${this.db_api}.usuario set`
+                let sql = ` update ${ db_api}.usuario set`
                 
                 let conditions =[]
                 let values =[]

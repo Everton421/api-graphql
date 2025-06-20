@@ -8,11 +8,7 @@ import { ProdutosPedidoRepository } from "../produto-pedido/produtos-pedido-repo
 import { ServicoPedidoRepository } from "../servicos-pedido/servico-pedido-repository";
 
 
-    type paramConsulta = {
-        data_recadastro?:string
-        vendedor?:number
-    }
-
+   
 export class SelectPedidoRepository{
 
     dateService = new DateService()
@@ -23,7 +19,7 @@ export class SelectPedidoRepository{
     parcelasRepository = new ParcelasPedidoRepository();
 
 
-     async findByparam(empresa:any ,param:Partial<PedidoArgs> ):Promise<Pedido[]>{ 
+     async findByparam(dbName:any ,param:Partial<PedidoArgs> ):Promise<Pedido[]>{ 
 
         return new Promise(   ( resolve, reject )=>{
 
@@ -31,8 +27,8 @@ export class SelectPedidoRepository{
              DATE_FORMAT(p.data_cadastro, '%Y-%m-%d') AS data_cadastro,
              DATE_FORMAT(p.data_recadastro, '%Y-%m-%d %H:%i:%s') AS data_recadastro,
             CONVERT(p.observacoes USING utf8) as observacoes 
-            from ${empresa}.pedidos as p
-             join ${empresa}.clientes as c on c.codigo = p.cliente
+            from ${dbName}.pedidos as p
+             join ${dbName}.clientes as c on c.codigo = p.cliente
             `;
 
             let conditions= []
@@ -83,10 +79,10 @@ export class SelectPedidoRepository{
     }) 
     }
 
-    async findComplete( empresa:any ,param: Partial< PedidoArgs> ) :Promise<Pedido[] | any>{
+    async findComplete( dbName:any ,param: Partial< PedidoArgs> ) :Promise<Pedido[] | any>{
 
         try{
-            const dadosPedidos:any[] = await this.findByparam(empresa, param )
+            const dadosPedidos:any[] = await this.findByparam(dbName, param )
             const pedidoRegistrados = await Promise.all( dadosPedidos.map( async ( i) =>{
                 
                     let produtos:any = []
@@ -94,20 +90,20 @@ export class SelectPedidoRepository{
                     let parcelas:any = []
                     let cliente
                     try{
-                          produtos = await this.produtosPedidoRepository.findProducts(empresa, i.codigo)
+                          produtos = await this.produtosPedidoRepository.findProducts(dbName, i.codigo)
                     }catch(e){ console.log(`erro ao tentar buscar produtos do pedido`,e)}
 
                      try{
-                        servicos = await this.servicosPedidoRepository.findServices(empresa, i.codigo)
+                        servicos = await this.servicosPedidoRepository.findServices(dbName, i.codigo)
                     }catch(e){ console.log(`erro ao tentar buscar servicos do pedido`,e)}
                     
                      try{
-                            let resultCliente:any = await this.clientePedidoReposotory.buscaCliente(empresa, i.cliente)
+                            let resultCliente:any = await this.clientePedidoReposotory.buscaCliente(dbName, i.cliente)
                              cliente = resultCliente.length > 0 ? resultCliente[0] : {};
                     }catch(e){ console.log(`erro ao tentar buscar o cliente do pedido`,e)}
 
                      try{
-                              parcelas = await this.parcelasRepository.findAll(empresa, i.codigo);
+                              parcelas = await this.parcelasRepository.findAll(dbName, i.codigo);
                     }catch(e){ console.log(`erro ao tentar buscar as parcelas do pedido`,e)}
 
 

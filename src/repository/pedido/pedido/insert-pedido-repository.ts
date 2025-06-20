@@ -14,15 +14,14 @@ export class InsertPedidoRepository{
     
         private produtosPedidoRepository = new ProdutosPedidoRepository();
         private  servicosPedidoRepository = new   ServicoPedidoRepository(); 
-        private clientePedidoReposotory = new ClientePedidoRepository();
         private  parcelasRepository = new ParcelasPedidoRepository();
 
 
-            async insert( empresa:string, pedido:InsertPedidoInput):Promise<ResultSetHeader> {
+            async insert( dbName:string, pedido:InsertPedidoInput):Promise<ResultSetHeader> {
             return new Promise( async(resolve, reject)=>{
             
                 let sql = `INSERT INTO 
-                    ${empresa}.pedidos 
+                    ${dbName}.pedidos 
                     ( codigo ,  id ,  vendedor , situacao, contato ,  descontos ,  forma_pagamento ,  quantidade_parcelas ,  total_geral ,  total_produtos ,  total_servicos ,  cliente ,  veiculo ,  data_cadastro ,  data_recadastro ,  tipo_os ,  enviado, tipo, observacoes)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )   `
 
@@ -42,7 +41,7 @@ export class InsertPedidoRepository{
             }
 
 
-        async create(empresa:string, pedido:InsertCompletePedidoInput): Promise<InsertCompletePedidoInput>{
+        async create(dbName:string, pedido:InsertCompletePedidoInput): Promise<InsertCompletePedidoInput>{
                 const dataAtual = this.dateService.obterDataAtual();
 
                     pedido.data_cadastro = dataAtual;
@@ -53,11 +52,11 @@ export class InsertPedidoRepository{
 
                       return new Promise( async (resolve,reject )=>{
                                 try{
-                                    let resultTaleOrder = await this.insert(empresa, pedido)
+                                    let resultTaleOrder = await this.insert(dbName, pedido)
                                     if( resultTaleOrder.affectedRows > 0 ){
                                         if( produtos && produtos.length > 0 ){
                                             try{
-                                               let resultInsertProductsOrder = await this.produtosPedidoRepository.insertProducts(empresa, produtos, pedido.codigo)
+                                               let resultInsertProductsOrder = await this.produtosPedidoRepository.insertProducts(dbName, produtos, pedido.codigo)
                                             }catch(e){ 
                                                console.log(` Erro ao tentar registrar os produtos do pedido `,e)
                                                return;
@@ -65,12 +64,12 @@ export class InsertPedidoRepository{
                                         }
                                         if( servicos && servicos.length > 0 ){
                                             try{
-                                              let resultInsertServicesOrder = await this.servicosPedidoRepository.insert(empresa, servicos, pedido.codigo);
+                                              let resultInsertServicesOrder = await this.servicosPedidoRepository.insert(dbName, servicos, pedido.codigo);
                                            }catch(e){  return  console.log(` Erro ao tentar registrar os servicos do pedido ` )  }
                                         }
                                         if( parcelas && parcelas.length > 0 ){
                                              try{
-                                               let resultInsertParcelas  = await this.parcelasRepository.insert(empresa, parcelas, pedido.codigo);
+                                               let resultInsertParcelas  = await this.parcelasRepository.insert(dbName, parcelas, pedido.codigo);
                                              }catch(e){  return  console.log(` Erro ao tentar registrar as parcelas do pedido ` )  }
                                             }
                                           resolve(pedido)

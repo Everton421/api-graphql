@@ -20,10 +20,9 @@ type ResultSetHeader = {
 }
 export class ProdutoRepository{
 
-       dbName = `\`${57473685000100}\``;
 
 
-    async findAll():Promise <IProduto[]> {
+    async findAll( dbname:string ):Promise <IProduto[]> {
         return new Promise(   (resolve, reject )  =>{
             const sql = `SELECT  
              *,
@@ -33,7 +32,7 @@ export class ProdutoRepository{
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
         DATE_FORMAT(data_recadastro, '%Y-%m-%d %H:%i:%s') AS data_recadastro 
 
-            FROM ${ this.dbName }.produtos;`  
+            FROM ${ dbname }.produtos;`  
               conn.query(sql, (err, result:IProduto[] )=>{
                 if(err){
                     reject(err)
@@ -44,7 +43,7 @@ export class ProdutoRepository{
 
         })
     }
-    async findByCode( codigo:number ):Promise <IProduto[]> {
+    async findByCode( codigo:number , dbname:string):Promise <IProduto[]> {
         return new Promise(   (resolve, reject )  =>{
             const sql = `SELECT  
              *,
@@ -53,7 +52,7 @@ export class ProdutoRepository{
           CAST( observacoes3 as CHAR(10000) CHARACTER SET utf8) as observacoes3, 
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
              DATE_FORMAT(data_recadastro, '%Y-%m-%d %H:%i:%s') AS data_recadastro 
-            FROM ${ this.dbName }.produtos
+            FROM ${ dbname }.produtos
             where codigo = ? 
             
             ;`  
@@ -68,7 +67,7 @@ export class ProdutoRepository{
         })
     }
 
-   async finByParam(param: Partial<ProdutoArgs>):Promise<Produto[]>{
+   async finByParam(param: Partial<ProdutoArgs> , dbname:string):Promise<Produto[]>{
     return new Promise((resolve,reject )=>{
 
     const sql = `SELECT  
@@ -78,7 +77,7 @@ export class ProdutoRepository{
           CAST( observacoes3 as CHAR(10000) CHARACTER SET utf8) as observacoes3, 
         DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
         DATE_FORMAT(data_recadastro, '%Y-%m-%d %H:%i:%s') AS data_recadastro 
-         FROM ${ this.dbName }.produtos`  
+         FROM ${ dbname }.produtos`  
 
           let conditions = [];
          let valueParamSql = [];
@@ -144,7 +143,7 @@ export class ProdutoRepository{
 
     }
 
-    async create(produto:Produto):Promise<ResultSetHeader> {
+    async create(produto:Produto, dbname:string):Promise<ResultSetHeader> {
         return new Promise(   ( resolve, reject)=>{
             let {
                 ativo,
@@ -166,7 +165,7 @@ export class ProdutoRepository{
                 observacoes2,
                 observacoes3   } = produto
 
-                const sql =` INSERT INTO  ${this.dbName}.produtos  
+                const sql =` INSERT INTO  ${dbname}.produtos  
                              (
                             estoque ,
                             preco ,
@@ -216,12 +215,12 @@ export class ProdutoRepository{
                         })
         }
 
-    async update(produto: UpdateProdutoInput): Promise<ResultSetHeader> {
+    async update(produto: UpdateProdutoInput, dbname:string): Promise<ResultSetHeader> {
 
         return new Promise((resolve, reject) => {
 
             let sql =
-                ` UPDATE ${this.dbName}.produtos SET `
+                ` UPDATE ${dbname}.produtos SET `
 
             let conditions = [];
             let valueParamSql = [];

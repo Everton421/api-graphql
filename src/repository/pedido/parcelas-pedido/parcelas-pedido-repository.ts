@@ -16,9 +16,9 @@ type ResultSetHeader = {
 
 export class ParcelasPedidoRepository{
 
-    async   findAll(empresa:any,codigo: number):Promise<ParcelasPedido[]> {
+    async   findAll(dbName:any,codigo: number):Promise<ParcelasPedido[]> {
             return new Promise(   (resolve, reject) => {
-                const sql = ` select *,  DATE_FORMAT(vencimento, '%Y-%m-%d') AS vencimento   from ${empresa}.parcelas where pedido = ? `
+                const sql = ` select *,  DATE_FORMAT(vencimento, '%Y-%m-%d') AS vencimento   from ${dbName}.parcelas where pedido = ? `
                  conn.query(sql, [codigo],   (err: QueryError | null , result:ParcelasPedido[] | any) => {
                     if (err) {
                         reject(err);
@@ -29,10 +29,10 @@ export class ParcelasPedidoRepository{
             })
         }
 
-   async   deleteParcelasPedido( empresa:any, codigo: number):Promise<ResultSetHeader |  QueryError > {
+   async   deleteParcelasPedido( dbName:any, codigo: number):Promise<ResultSetHeader |  QueryError > {
               return new Promise(  (resolve, reject) => {
       
-                  let sql2 = ` delete from ${empresa}.parcelas
+                  let sql2 = ` delete from ${dbName}.parcelas
                                           where pedido = ${codigo}
                                       `
                    conn.query(sql2, (err: QueryError, result:ResultSetHeader) => {
@@ -46,14 +46,14 @@ export class ParcelasPedidoRepository{
       
           }
 
-    async insert(empresa:any,  parcelas:InsertParcelasPedidoInput[], codigoPedido:any) :Promise<ResultSetHeader >{
+    async insert(dbName:any,  parcelas:InsertParcelasPedidoInput[], codigoPedido:any) :Promise<ResultSetHeader >{
       return new Promise(   (resolve, reject )=>{
             for(let p of parcelas){
                 let i = 1;
 
                let {  parcela ,  valor ,vencimento    } = p     
           
-          let sql = `  INSERT INTO ${empresa}.parcelas ( pedido ,  parcela ,  valor, vencimento ) VALUES ( ?  , ?,  ?, ?  )`;
+          let sql = `  INSERT INTO ${dbName}.parcelas ( pedido ,  parcela ,  valor, vencimento ) VALUES ( ?  , ?,  ?, ?  )`;
           let dados = [ codigoPedido ,  parcela ,  valor ,vencimento ]
   
                     conn.query( sql,  dados , (err: QueryError |  any, resultParcelas: ResultSetHeader | any   ) => {

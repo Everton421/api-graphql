@@ -6,16 +6,15 @@ import { UpdateTiposOsInput } from "../../dtos/inputs/tipos_os/update-tipos_os-i
 
 export class TipoOsRepository{
  
-    dbName = `\`${57473685000100}\``;
-
-        async findByParam(param: Partial<TiposOsArgs>): Promise<any[]> {
+ 
+        async findByParam(param: Partial<TiposOsArgs>, dbname:string): Promise<any[]> {
             return new Promise((resolve, reject) => {
     
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.tipos_os `
+                FROM ${dbname}.tipos_os `
     
                 let conditions = [];
                 let valueParamSql = [];
@@ -65,13 +64,13 @@ export class TipoOsRepository{
     
             })
         }
-      async findByCode(code: number): Promise<TiposOsArgs[]> {
+      async findByCode(code: number, dbname:string): Promise<TiposOsArgs[]> {
             return new Promise((resolve, reject) => {
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.tipos_os WHERE codigo = ? 
+                FROM ${dbname}.tipos_os WHERE codigo = ? 
                 `
                 conn.query(sql, code, (err, result: TiposOsArgs[] | any) => {
                     if (err) {
@@ -87,13 +86,13 @@ export class TipoOsRepository{
         }
 
 
-           async create(categoria : CreateTiposOsInput): Promise<ResultSetHeader> {
+           async create(categoria : CreateTiposOsInput, dbname:string): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
 
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.tipos_os
+                 ${dbname}.tipos_os
                       (   
                         id,
                         descricao,
@@ -113,10 +112,10 @@ export class TipoOsRepository{
                 })
             }
         
-            async update(categoria: UpdateTiposOsInput ):Promise<ResultSetHeader>{
+            async update(categoria: UpdateTiposOsInput ,dbname:string):Promise<ResultSetHeader>{
         
                 return new Promise((resolve, reject ) =>{
-                    let sql = `UPDATE ${this.dbName}.tipos_os SET 
+                    let sql = `UPDATE ${dbname}.tipos_os SET 
                     ` 
         
                     let conditions=[];

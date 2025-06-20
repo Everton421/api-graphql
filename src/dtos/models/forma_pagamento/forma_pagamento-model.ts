@@ -4,7 +4,7 @@ import { Field, Int, ObjectType } from "type-graphql";
 @ObjectType()
 export class FormaPagamento{
 
-     @Field(()=>Int)
+     @Field(()=>Int ) 
      codigo:number
      
      @Field(()=>Int)

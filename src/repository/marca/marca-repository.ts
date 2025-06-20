@@ -6,16 +6,15 @@ import { UpdateMarcasInput } from "../../dtos/inputs/marca/update-marcas";
 
 export class MarcasRepository{
  
-    dbName = `\`${57473685000100}\``;
 
-        async findByParam(param: Partial<MarcasArgs>): Promise<any[]> {
+        async findByParam(param: Partial<MarcasArgs>, dbname:string ): Promise<any[]> {
             return new Promise((resolve, reject) => {
     
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.marcas `
+                FROM ${dbname}.marcas `
     
                 let conditions = [];
                 let valueParamSql = [];
@@ -65,13 +64,13 @@ export class MarcasRepository{
     
             })
         }
-      async findByCode(code: number): Promise<MarcasArgs[]> {
+      async findByCode(code: number, dbname:string ): Promise<MarcasArgs[]> {
             return new Promise((resolve, reject) => {
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.marcas WHERE codigo = ? 
+                FROM ${dbname}.marcas WHERE codigo = ? 
                 `
                 conn.query(sql, code, (err, result: MarcasArgs[] | any) => {
                     if (err) {
@@ -87,13 +86,13 @@ export class MarcasRepository{
         }
 
 
-           async create(categoria : CreateMarcasInput): Promise<ResultSetHeader> {
+           async create(categoria : CreateMarcasInput , dbname:string): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
 
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.marcas
+                 ${dbname}.marcas
                       (   
                         id,
                         descricao,
@@ -113,10 +112,10 @@ export class MarcasRepository{
                 })
             }
         
-            async update(categoria: UpdateMarcasInput ):Promise<ResultSetHeader>{
+            async update(categoria: UpdateMarcasInput, dbname:string ):Promise<ResultSetHeader>{
         
                 return new Promise((resolve, reject ) =>{
-                    let sql = `UPDATE ${this.dbName}.marcas SET 
+                    let sql = `UPDATE ${dbname}.marcas SET 
                     ` 
         
                     let conditions=[];

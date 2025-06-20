@@ -25,10 +25,10 @@ type returnUpdatePedido= {
 export class UpdatePedidoRepository{
             dateService = new DateService()
     
-    private async  updateTable( empresa:any ,orcamento:InsertPedidoInput ) :Promise<ResultSetHeader >{
+    private async  updateTable( dbName:any ,orcamento:InsertPedidoInput ) :Promise<ResultSetHeader >{
         return new Promise(async (resolve, reject) => {
             const sql = `
-                UPDATE ${empresa}.pedidos  
+                UPDATE ${dbName}.pedidos  
                 set 
             `
              let conditions= []
@@ -122,7 +122,7 @@ export class UpdatePedidoRepository{
         })
     }
 
-    async update( empresa:any ,orcamento: InsertCompletePedidoInput ):Promise<returnUpdatePedido>{
+    async update( dbName:any ,orcamento: InsertCompletePedidoInput ):Promise<returnUpdatePedido>{
 
       return new Promise ( async (resolve, reject )=>{
        
@@ -132,25 +132,24 @@ export class UpdatePedidoRepository{
 
         const produtos = orcamento.produtos
         const servicos = orcamento.servicos
-        const cliente = orcamento.cliente
         const parcelas = orcamento.parcelas
 
                     try{
-                    await this.updateTable(empresa, orcamento )
+                    await this.updateTable(dbName, orcamento )
                 }catch(e){ console.log("Erro ao tentar atualizar tabela do pedido " , e  ) 
                     reject( { ok:false, erro:true, msg:"Erro ao tentar atualizar tabela do pedido" }) 
                 }
 
                 let validProdutos: ProdutoPedido[] =[];
                  try{ 
-                    validProdutos = await produtosPedidoRepository.findProducts(empresa, orcamento.codigo);
+                    validProdutos = await produtosPedidoRepository.findProducts(dbName, orcamento.codigo);
                  }catch(e){
                         console.log(" Erro ao tentar validar os produtos do pedido ",e )
                     reject(  { ok:false, erro:true, msg: " Erro ao tentar validar os produtos do pedido " }) 
                  }
                 if( validProdutos.length > 0 ){
                      try{ 
-                         await produtosPedidoRepository.deleteProdutosPedido(empresa, orcamento.codigo);
+                         await produtosPedidoRepository.deleteProdutosPedido(dbName, orcamento.codigo);
                      }catch(e){
                             console.log(" Erro ao tentar excluir os produtos do pedido ", e)
                             reject(  { ok:false, erro:true, msg:" Erro ao tentar excluir os produtos do pedido " } )
@@ -158,7 +157,7 @@ export class UpdatePedidoRepository{
                 }
                 if( produtos && produtos.length > 0 ){
                        try{ 
-                        await produtosPedidoRepository.insertProducts(empresa,produtos, orcamento.codigo );
+                        await produtosPedidoRepository.insertProducts(dbName,produtos, orcamento.codigo );
 
                     }catch(e){
                                console.log(" Erro ao tentar inserir os produtos do pedido ", e )
@@ -170,7 +169,7 @@ export class UpdatePedidoRepository{
                 let validServicos: ServicoPedido[]=[]
 
                     try{
-                            validServicos = await servicoPedidoRepository.findServices(empresa, orcamento.codigo)
+                            validServicos = await servicoPedidoRepository.findServices(dbName, orcamento.codigo)
                     }catch(e){
                             console.log(" Erro ao tentar validar os servicos do pedido ", e)
                     reject(  { ok:false, erro:true, msg: " Erro ao tentar validar os servicos do pedido " } )
@@ -178,7 +177,7 @@ export class UpdatePedidoRepository{
 
                     if( validServicos.length > 0 ){
                         try{ 
-                         await servicoPedidoRepository.deleteServicosPedido(empresa, orcamento.codigo);
+                         await servicoPedidoRepository.deleteServicosPedido(dbName, orcamento.codigo);
                      }catch(e){
                             console.log(" Erro ao tentar excluir os servicos do pedido ", e)
                             reject(  { ok:false, erro:true, msg:" Erro ao tentar excluir os servicos do pedido " }) 
@@ -186,7 +185,7 @@ export class UpdatePedidoRepository{
                     }
                       if( servicos && servicos.length > 0 ){
                        try{ 
-                        await servicoPedidoRepository.insert(empresa, servicos, orcamento.codigo);
+                        await servicoPedidoRepository.insert(dbName, servicos, orcamento.codigo);
                     }catch(e){
                                console.log(" Erro ao tentar inserir os servicos do pedido ", e )
                             reject(  { ok:false, erro:true, msg:" Erro ao tentar inserir os servicos do pedido " }) 
@@ -196,7 +195,7 @@ export class UpdatePedidoRepository{
                    let validParcelas: ParcelasPedido[]=[]
 
                       try{
-                            validParcelas = await parcelasPedidoRepository.findAll(empresa, orcamento.codigo)
+                            validParcelas = await parcelasPedidoRepository.findAll(dbName, orcamento.codigo)
                     }catch(e){
                             console.log(" Erro ao tentar validar as parcelas do pedido ", e)
                     reject(  { ok:false, erro:true, msg: " Erro ao tentar validar as parcelas do pedido " })
@@ -204,7 +203,7 @@ export class UpdatePedidoRepository{
 
                     if( validParcelas.length > 0 ){
                         try{ 
-                         await parcelasPedidoRepository.deleteParcelasPedido(empresa, orcamento.codigo);
+                         await parcelasPedidoRepository.deleteParcelasPedido(dbName, orcamento.codigo);
                      }catch(e){
                             console.log(" Erro ao tentar excluir as parcelas do pedido ", e)
                             reject(  { ok:false, erro:true, msg:" Erro ao tentar excluir as parcelas  do pedido " } )
@@ -213,7 +212,7 @@ export class UpdatePedidoRepository{
                     
                     if( parcelas && parcelas.length > 0 ){
                        try{ 
-                        await parcelasPedidoRepository.insert( empresa, parcelas, orcamento.codigo);
+                        await parcelasPedidoRepository.insert( dbName, parcelas, orcamento.codigo);
                     }catch(e){
                                console.log(" Erro ao tentar inserir as parcelas do pedido ", e )
                             reject(  { ok:false, erro:true, msg:" Erro ao tentar inserir as parcelas do pedido " } )

@@ -18,9 +18,9 @@ type ResultSetHeader = {
 
 export class VeiculoRepository{
 
-    dbName = `\`${57473685000100}\``;
+    
 
-    async findAll():Promise <Veiculo[]> {
+    async findAll( dbName:string ):Promise <Veiculo[]> {
         return new Promise((resolve, reject )=>{
 
             const sql = `
@@ -29,7 +29,7 @@ export class VeiculoRepository{
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
             DATE_FORMAT ( data_recadastro, '%Y-%m-%d %H:%m:%s') AS data_recadastro    
             from 
-            ${this.dbName}.veiculos
+            ${ dbName}.veiculos
             `
             conn.query(sql, ( err:any, result:Veiculo[] )=>{
                 if(err){
@@ -41,7 +41,7 @@ export class VeiculoRepository{
         })
     }
 
-    async findByCode( codigo:number ):Promise<Veiculo[]> {
+    async findByCode( codigo:number,dbName:string ):Promise<Veiculo[]> {
         return new Promise((resolve, reject )=>{
 
             const sql = `
@@ -50,7 +50,7 @@ export class VeiculoRepository{
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
             DATE_FORMAT ( data_recadastro, '%Y-%m-%d %H:%m:%s') AS data_recadastro    
             from 
-            ${this.dbName}.veiculos where codigo = ? 
+            ${dbName}.veiculos where codigo = ? 
             `
             conn.query(sql, codigo, ( err:any, result:any )=>{
                 if(err){
@@ -63,7 +63,7 @@ export class VeiculoRepository{
     }
 
 
-    async findByParam( param:Partial<VeiculoArgs> ): Promise <Veiculo[]> {
+    async findByParam( param:Partial<VeiculoArgs> ,  dbName:string): Promise <Veiculo[]> {
             return new Promise((resolve,reject ) =>{
     
                 const sql = 
@@ -71,7 +71,7 @@ export class VeiculoRepository{
                 SELECT *, 
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d %H-%m-%s') as data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%m:%s') as data_recadastro  
-                FROM ${ this.dbName }.veiculos 
+                FROM ${ dbName }.veiculos 
                 `
     
                 let conditions = [];
@@ -148,12 +148,12 @@ export class VeiculoRepository{
             })
         }
 
-             async insert(veiculo: CreateVeiculoInput): Promise<ResultSetHeader> {
+             async insert(veiculo: CreateVeiculoInput, dbName:string ): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.veiculos
+                 ${dbName}.veiculos
                       (   
                         id,
                         cliente,
@@ -181,11 +181,11 @@ export class VeiculoRepository{
             }
  
 
-     async update(veiculo:UpdateVeiculoInput): Promise<ResultSetHeader>{
+     async update(veiculo:UpdateVeiculoInput ,dbName:string): Promise<ResultSetHeader>{
                 return new Promise((resolve,reject ) =>{
 
                 let sql = `
-                    UPDATE ${ this.dbName }.veiculos SET 
+                    UPDATE ${ dbName }.veiculos SET 
                 ` 
 
                 let conditions=[]
@@ -243,11 +243,15 @@ export class VeiculoRepository{
 
            let whereClause = " WHERE CODIGO = ? "
                 
-           let finalSql = conditions.join( ' , ') + whereClause
+           let finalSql =sql + conditions.join( ' , ') + whereClause
                 
                    conn.query(finalSql, values, (err: any, result: ResultSetHeader | any) => {
-                        if (err) reject(err);
+                        if (err) {
+                            console.log("Erro ao atualizar veiculo", err)
+                            reject(err);
+                        }else{
                         resolve(result)
+                        }
                     })
 
                 })

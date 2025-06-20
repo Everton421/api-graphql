@@ -5,6 +5,7 @@ export class User{
  
      @Field()
       nome:string
-     @Field(()=>Int)
+
+     @Field()
       codigo:number
 }

@@ -7,16 +7,15 @@ import { UpdateCategoriaInput } from "../../dtos/inputs/categoria/update-categor
 
 export class CategoriaRepository{
  
-    dbName = `\`${57473685000100}\``;
 
-        async findByParam(param: Partial<CategoriaArgs>): Promise<any[]> {
+        async findByParam(param: Partial<CategoriaArgs>, dbName:string): Promise<any[]> {
             return new Promise((resolve, reject) => {
     
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias `
+                FROM ${dbName}.categorias `
     
                 let conditions = [];
                 let valueParamSql = [];
@@ -66,13 +65,13 @@ export class CategoriaRepository{
     
             })
         }
-      async findByCode(code: number): Promise<Categoria[]> {
+      async findByCode(code: number, dbname:string): Promise<Categoria[]> {
             return new Promise((resolve, reject) => {
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.categorias WHERE codigo = ? 
+                FROM ${dbname}.categorias WHERE codigo = ? 
                 `
                 conn.query(sql, code, (err, result: Categoria[] | any) => {
                     if (err) {
@@ -88,13 +87,13 @@ export class CategoriaRepository{
         }
 
 
-           async create(categoria : CreateCategoriaInput): Promise<ResultSetHeader> {
+           async create(categoria : CreateCategoriaInput,  dbname:string ): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
 
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.categorias
+                 ${dbname}.categorias
                       (   
                         id,
                         descricao,
@@ -114,10 +113,10 @@ export class CategoriaRepository{
                 })
             }
         
-            async update(categoria: UpdateCategoriaInput ):Promise<ResultSetHeader>{
+            async update(categoria: UpdateCategoriaInput , dbname:string):Promise<ResultSetHeader>{
         
                 return new Promise((resolve, reject ) =>{
-                    let sql = `UPDATE ${this.dbName}.categorias SET 
+                    let sql = `UPDATE ${dbname}.categorias SET 
                     ` 
         
                     let conditions=[];

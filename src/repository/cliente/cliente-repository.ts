@@ -19,12 +19,11 @@ type ResultSetHeader = {
 }
 
 export class ClienteRepository {
-    dbName = `\`${57473685000100}\``;
 
 
-    async findAll(): Promise<ICLiente[]> {
+    async findAll( dbname:string ): Promise<ICLiente[]> {
         return new Promise((resolve, reject) => {
-            const sql = ` SELECT * FROM ${this.dbName}.clientes`;
+            const sql = ` SELECT * FROM ${dbname}.clientes`;
 
             conn.query(sql, (err, result: ICLiente[]) => {
                 if (err) {
@@ -37,14 +36,14 @@ export class ClienteRepository {
         })
     }
 
-    async findByParam(param: Partial<ClienteArgs>): Promise<ICLiente[]> {
+    async findByParam(param: Partial<ClienteArgs>, dbname:string ): Promise<ICLiente[]> {
         return new Promise((resolve, reject) => {
 
             const sql = `
             SELECT *,
             DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
             DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-            FROM ${this.dbName}.clientes 
+            FROM ${dbname}.clientes 
             `
 
             let conditions = [];
@@ -96,13 +95,13 @@ export class ClienteRepository {
         })
     }
 
-    async findByCode(code: number): Promise<Cliente[]> {
+    async findByCode(code: number, dbname:string ): Promise<Cliente[]> {
         return new Promise((resolve, reject) => {
             const sql = `
             SELECT *,
             DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
             DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-            FROM ${this.dbName}.clientes WHERE codigo = ? 
+            FROM ${dbname}.clientes WHERE codigo = ? 
             `
             conn.query(sql, code, (err, result: Cliente[] | any) => {
                 if (err) {
@@ -117,12 +116,12 @@ export class ClienteRepository {
 
     }
 
-    async insert(cliente: CreateClienteInput): Promise<ResultSetHeader> {
+    async insert(cliente: CreateClienteInput, dbname:string): Promise<ResultSetHeader> {
         return new Promise((resolve, reject) => {
             let sql =
                 `  
          INSERT INTO 
-         ${this.dbName}.clientes
+         ${dbname}.clientes
               (   
                 celular, 
                 nome ,
@@ -151,10 +150,10 @@ export class ClienteRepository {
         })
     }
 
-    async update(cliente: UpdateClienteInput):Promise<ResultSetHeader>{
+    async update(cliente: UpdateClienteInput, dbname:string):Promise<ResultSetHeader>{
 
         return new Promise((resolve, reject ) =>{
-            let sql = `UPDATE ${this.dbName}.clientes SET 
+            let sql = `UPDATE ${dbname}.clientes SET 
             ` 
 
             let conditions=[];

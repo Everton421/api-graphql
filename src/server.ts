@@ -19,11 +19,17 @@ async function main(){
         resolvers: [ ClienteResolver ,VeiculoResolver, ProdutoResolver, PedidoResolver, 
                   ServicoResolver, CategoriaResolver,FormaPagamentoResolver, MarcaResolver,
                     TiposOsResolver, LoginResolver],
-        emitSchemaFile: path.resolve(__dirname, 'schema.gql')
+        emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
+        
     })
     
     const server = new ApolloServer({
-            schema
+            schema,
+            context: ( {req})=>{
+                return {
+                    req: req
+                }
+            } 
     })
 
      const { url } = await server.listen()

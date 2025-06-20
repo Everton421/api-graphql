@@ -3,7 +3,7 @@ import { Field, ObjectType } from "type-graphql";
 @ObjectType()
 export class Produto{
     
-    @Field()
+    @Field({nullable:true})
     codigo:number
 
     @Field()

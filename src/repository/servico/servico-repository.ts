@@ -18,10 +18,9 @@ type ResultSetHeader = {
 
 export class ServicoRepository{
 
-    dbName = `\`${57473685000100}\``;
 
 
-    async findAll():Promise <Servico[]> {
+    async findAll(dbname:string):Promise <Servico[]> {
         return new Promise((resolve, reject )=>{
 
             const sql = `
@@ -30,7 +29,7 @@ export class ServicoRepository{
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
             DATE_FORMAT ( data_recadastro, '%Y-%m-%d %H:%m:%s') AS data_recadastro    
             from 
-            ${this.dbName}.servicos
+            ${dbname}.servicos
             `
             conn.query(sql, ( err:any, result:Servico[] )=>{
                 if(err){
@@ -42,7 +41,7 @@ export class ServicoRepository{
         })
     }
 
-    async findByCode( codigo:number ):Promise<Servico[]> {
+    async findByCode( codigo:number, dbname:string ):Promise<Servico[]> {
         return new Promise((resolve, reject )=>{
 
             const sql = `
@@ -51,7 +50,7 @@ export class ServicoRepository{
             DATE_FORMAT(data_cadastro, '%Y-%m-%d') AS data_cadastro,
             DATE_FORMAT ( data_recadastro, '%Y-%m-%d %H:%m:%s') AS data_recadastro    
             from 
-            ${this.dbName}.servicos where codigo = ? 
+            ${dbname}.servicos where codigo = ? 
             `
             conn.query(sql, codigo, ( err:any, result:any )=>{
                 if(err){
@@ -63,7 +62,7 @@ export class ServicoRepository{
         })
     }
 
-    async findByParam( param:Partial<ServicoArgs> ): Promise <Servico[]> {
+    async findByParam( param:Partial<ServicoArgs>, dbname:string ): Promise <Servico[]> {
         return new Promise((resolve,reject ) =>{
 
             const sql = 
@@ -71,7 +70,7 @@ export class ServicoRepository{
             SELECT *, 
             DATE_FORMAT( data_cadastro, '%Y-%m-%d %H-%m-%s') as data_cadastro,
             DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%m:%s') as data_recadastro  
-            FROM ${ this.dbName }.servicos 
+            FROM ${ dbname }.servicos 
             `
 
             let conditions = [];
@@ -132,7 +131,7 @@ export class ServicoRepository{
     }
 
 
-    async insert ( servico:CreateServicoInput): Promise<ResultSetHeader>{
+    async insert ( servico:CreateServicoInput, dbname:string): Promise<ResultSetHeader>{
 
        return new Promise(   ( resolve, reject)=>{
             let {
@@ -145,7 +144,7 @@ export class ServicoRepository{
                 ativo
                     } = servico
 
-                const sql =` INSERT INTO  ${this.dbName}.servicos  
+                const sql =` INSERT INTO  ${dbname}.servicos  
                              (
                             valor ,
                             aplicacao,
@@ -160,8 +159,8 @@ export class ServicoRepository{
 
                             const values = [  valor ,  aplicacao ,  tipo_serv ,  data_cadastro ,   data_recadastro  ,  ativo  ]
 
-                let dados = [  valor, aplicacao, tipo_serv, data_cadastro, data_recadastro, ativo] 
-                              conn.query(sql,   (err:any, result:ResultSetHeader )=>{
+                
+                              conn.query(sql, values,  (err:any, result:ResultSetHeader | any )=>{
                                 if(err){
                                      console.log(err)
                                      reject(err);
@@ -174,13 +173,13 @@ export class ServicoRepository{
                         })
         }
 
- async update(   servico:UpdateServicoInput ):Promise<ResultSetHeader>{
+ async update(   servico:UpdateServicoInput, dbname:string ):Promise<ResultSetHeader>{
    
   
         return new Promise(  ( resolve, reject)=>{
             let sql = 
             `
-            UPDATE ${ this.dbName }.servicos SET 
+            UPDATE ${ dbname }.servicos SET 
             
               `
                 let conditions=[];

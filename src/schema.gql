@@ -90,26 +90,26 @@ input CreateMarcasInput {
 
 """Dados para a criação de um produto"""
 input CreateProdutoInput {
-  ativo: String!
-  class_fiscal: String!
-  codigo: Int!
-  cst: String!
-  data_cadastro: String!
-  data_recadastro: String!
+  ativo: String
+  class_fiscal: String
+  codigo: Int
+  cst: String
+  data_cadastro: String
+  data_recadastro: String
   descricao: String!
-  estoque: Float!
-  grupo: Int!
-  id: Float!
-  marca: Int!
-  num_fabricante: String!
-  num_original: String!
-  observacoes1: String!
-  observacoes2: String!
-  observacoes3: String!
-  origem: String!
+  estoque: Int
+  grupo: Int
+  id: Int
+  marca: Int
+  num_fabricante: String
+  num_original: String
+  observacoes1: String
+  observacoes2: String
+  observacoes3: String
+  origem: String
   preco: Float!
-  sku: String!
-  tipo: Float!
+  sku: String
+  tipo: Float
 }
 
 """ Dados para criação de um Serviço"""
@@ -242,7 +242,7 @@ type Mutation {
   createProduto(dados: CreateProdutoInput!): Produto!
   createTipoOs(dados: CreateTiposOsInput!): TiposOs!
   createVeiculo(dados: CreateVeiculoInput!): Veiculo!
-  loginService(dados: LoginInput!): Login!
+  login(dados: LoginInput!): Login!
   updateCategoria(dados: UpdateCategoriaInput!): Categoria!
   updateCliente(dados: UpdateClienteInput!): Cliente!
   updateMarca(dados: UpdateMarcasInput!): Marca!
@@ -287,7 +287,7 @@ type Pedido {
 type Produto {
   ativo: String!
   class_fiscal: String!
-  codigo: Float!
+  codigo: Float
   cst: String!
   data_cadastro: String!
   data_recadastro: String!
@@ -350,8 +350,6 @@ type Query {
 
   """marcas"""
   findMarcas(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): [Marca!]!
-  findTipoOs(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): TiposOs!
-  findTiposOs(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): [TiposOs!]!
 
   """ Filtra somente uma forma de pagamento"""
   formaPagamento(ativo: Int!, codigo: Int!, data_cadastro: String!, data_recadastro: Int!, desc_maximo: Int!, descricao: String!, id: Int!, intervalo: Int!, parcelas: Int!, recebimento: Int!): FormaPagamento!
@@ -396,6 +394,8 @@ type Query {
   produtos(ativo: String, codigo: Int, descricao: String, grupo: Int, marca: Int, num_fabricante: String, num_original: String, origem: String, sku: String): [Produto!]!
   servico(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): Servico!
   servicos(aplicacao: String, ativo: String, codigo: Float, data_recadastro: String): [Servico!]!
+  tipoOs(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): TiposOs!
+  tiposOs(ativo: String, codigo: Int, data_cadastro: String, data_recadastro: String, descricao: String, id: Int): [TiposOs!]!
   veiculo(ano: String, ativo: String, cliente: Int, codigo: Int, combustivel: String, cor: String, data_cadastro: String, data_recadastro: String, id: Int, marca: String, modelo: String, placa: String): Veiculo!
   veiculos(ano: String, ativo: String, cliente: Int, codigo: Int, combustivel: String, cor: String, data_cadastro: String, data_recadastro: String, id: Int, marca: String, modelo: String, placa: String): [Veiculo!]!
 }
@@ -543,21 +543,21 @@ input UpdateVeiculoInput {
 }
 
 type User {
-  codigo: Int!
+  codigo: Float!
   nome: String!
 }
 
 type Veiculo {
-  ano: String!
-  ativo: String!
-  cliente: Int!
-  codigo: Int!
-  combustivel: String!
-  cor: String!
-  data_cadastro: String!
-  data_recadastro: String!
-  id: Int!
-  marca: String!
-  modelo: String!
-  placa: String!
+  ano: String
+  ativo: String
+  cliente: Int
+  codigo: Int
+  combustivel: String
+  cor: String
+  data_cadastro: String
+  data_recadastro: String
+  id: Int
+  marca: String
+  modelo: String
+  placa: String
 }

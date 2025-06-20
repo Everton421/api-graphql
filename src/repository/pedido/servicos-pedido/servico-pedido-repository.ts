@@ -20,11 +20,11 @@ type ResultSetHeader = {
   export class ServicoPedidoRepository{
 
    
-        async   findServices( empresa:any,codigo: number) :Promise<ServicoPedido[]>{
+        async   findServices( dbName:any,codigo: number) :Promise<ServicoPedido[]>{
             return new Promise(   (resolve, reject) => {
                 const sql = ` select 
-                sp.*, s.aplicacao  from ${empresa}.servicos_pedido sp 
-                join ${empresa}.servicos s on s.codigo = sp.codigo
+                sp.*, s.aplicacao  from ${dbName}.servicos_pedido sp 
+                join ${dbName}.servicos s on s.codigo = sp.codigo
                 where sp.pedido = ? `
                 conn.query(sql, [codigo],   (err:any, result:ServicoPedido[] | any) => {
                     if (err) {
@@ -37,7 +37,7 @@ type ResultSetHeader = {
         }
    
         
-    async insert(  empresa:any,servicos:InsertServicosPedidoInput[], pedido:number ):Promise<ResultSetHeader>{
+    async insert(  dbName:any,servicos:InsertServicosPedidoInput[], pedido:number ):Promise<ResultSetHeader>{
          
         return new Promise(   (resolve, reject )=>{
   
@@ -57,7 +57,7 @@ type ResultSetHeader = {
                    if( !desconto) desconto = 0;
                    if( !total) total = 0;
      
-                const sql =  ` INSERT INTO    ${empresa}.servicos_pedido  ( pedido ,  codigo ,  desconto ,  quantidade ,  valor ,  total ) VALUES ( ?, ?, ?, ?, ?, ?)   `;
+                const sql =  ` INSERT INTO    ${dbName}.servicos_pedido  ( pedido ,  codigo ,  desconto ,  quantidade ,  valor ,  total ) VALUES ( ?, ?, ?, ?, ?, ?)   `;
   
                   let dados = [ pedido ,  codigo ,  desconto ,  quantidade ,  valor ,  total  ]
                   conn.query( sql,dados ,(error:any, resultado:ResultSetHeader | any)=>{
@@ -79,10 +79,10 @@ type ResultSetHeader = {
         }
           })
   }
-      async   deleteServicosPedido( empresa:any, codigo: number):Promise<ResultSetHeader |  QueryError > {
+      async   deleteServicosPedido( dbName:any, codigo: number):Promise<ResultSetHeader |  QueryError > {
               return new Promise(  (resolve, reject) => {
       
-                  let sql2 = ` delete from ${empresa}.servicos_pedido
+                  let sql2 = ` delete from ${dbName}.servicos_pedido
                                           where pedido = ${codigo}
                                       `
                    conn.query(sql2, (err: QueryError, result:ResultSetHeader) => {

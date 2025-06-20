@@ -7,16 +7,15 @@ import { UpdateFormaPagamentoInput } from "../../dtos/inputs/forma_pagamento/upd
 
 export class formaPagamentoRepository{
  
-    dbName = `\`${57473685000100}\``;
 
-        async findByParam(param: Partial<FormaPagamentoArgs>): Promise<any[]> {
+        async findByParam(param: Partial<FormaPagamentoArgs>, dbname:string): Promise<any[]> {
             return new Promise((resolve, reject) => {
     
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.forma_pagamento `
+                FROM ${dbname}.forma_pagamento `
     
                 let conditions = [];
                 let valueParamSql = [];
@@ -69,13 +68,13 @@ export class formaPagamentoRepository{
     
             })
         }
-      async findByCode(code: number): Promise<FormaPagamento[]> {
+      async findByCode(code: number, dbname:string ): Promise<FormaPagamento[]> {
             return new Promise((resolve, reject) => {
                 const sql = `
                 SELECT *,
                 DATE_FORMAT( data_cadastro, '%Y-%m-%d') AS data_cadastro,
                 DATE_FORMAT( data_recadastro, '%Y-%m-%d %H:%i:%s') as data_recadastro
-                FROM ${this.dbName}.forma_pagamento WHERE codigo = ? 
+                FROM ${dbname}.forma_pagamento WHERE codigo = ? 
                 `
                 conn.query(sql, code, (err, result: FormaPagamento[] | any) => {
                     if (err) {
@@ -91,13 +90,13 @@ export class formaPagamentoRepository{
         }
 
 
-           async create(fpgt : CreateFormaPagamentoInput): Promise<ResultSetHeader> {
+           async create(fpgt : CreateFormaPagamentoInput, dbname:string ): Promise<ResultSetHeader> {
                 return new Promise((resolve, reject) => {
 
                     let sql =
                         `  
                  INSERT INTO 
-                 ${this.dbName}.forma_pagamento
+                 ${dbname}.forma_pagamento
                       (   
                         id,
                         descricao,
@@ -121,10 +120,10 @@ export class formaPagamentoRepository{
                 })
             }
         
-            async update(fpgt: UpdateFormaPagamentoInput ):Promise<ResultSetHeader>{
+            async update(fpgt: UpdateFormaPagamentoInput, dbname:string  ):Promise<ResultSetHeader>{
         
                 return new Promise((resolve, reject ) =>{
-                    let sql = `UPDATE ${this.dbName}.forma_pagamento SET 
+                    let sql = `UPDATE ${dbname}.forma_pagamento SET 
                     ` 
         
                     let conditions=[];

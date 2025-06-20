@@ -1,4 +1,4 @@
-import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Args, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Servico } from "../dtos/models/servicos/servico-model";
 import { GraphQLError, resolveReadonlyArrayThunk } from "graphql";
 import { ServicoRepository } from "../repository/servico/servico-repository";
@@ -6,6 +6,7 @@ import { ServicoArgs } from "../dtos/args/servico-args";
 import { CreateServicoInput } from "../dtos/inputs/servico/create-servico-input";
 import { UpdateServicoInput } from "../dtos/inputs/servico/update-servico-input";
 import { DateService } from "../service/date-service";
+import { TokenService } from "../service/token-service";
  
 @Resolver(()=>Servico)
 
@@ -17,28 +18,56 @@ export class ServicoResolver{
     servico = new Servico() 
         repository = new ServicoRepository();
         dateService = new DateService();
+        tokenService = new TokenService();
 
     @Query( ()=>[Servico], { name:"servicos"})
-    async servicos( @Args(){ aplicacao, ativo, codigo, data_recadastro}:ServicoArgs ){
-            let param:ServicoArgs = { 
+    async servicos( @Args(){ aplicacao, ativo, codigo, data_recadastro}:ServicoArgs, @Ctx() context:any){
+            
+             if(  !context.req.headers.token  ){
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Token nao informado!" } })
+                      } 
+                     let decoded = await this.tokenService.DecodedToken(context.req.headers.token  );
+
+                     if(decoded.erro || decoded.payload === undefined) {
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Erro ao processar o token!" } })
+                     }  
+
+                        let cnpj = decoded.payload?.cnpj;
+                     let db =   `\`${cnpj}\``
+        
+        
+        let param:ServicoArgs = { 
                 aplicacao: aplicacao,
                 ativo:ativo,
                 codigo:codigo,
                  data_recadastro:data_recadastro
             }    
-        let aux = await this.repository.findByParam(param);
+        let aux = await this.repository.findByParam(param, db );
         return aux;
     }
    
     @Query( ()=> Servico, { name: "servico"})
-    async findServico(@Args(){ aplicacao,ativo,codigo,data_recadastro }:ServicoArgs ){
+    async findServico(@Args(){ aplicacao,ativo,codigo,data_recadastro }:ServicoArgs, @Ctx() context:any ){
+
+                 if(  !context.req.headers.token  ){
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Token nao informado!" } })
+                      } 
+                     let decoded = await this.tokenService.DecodedToken(context.req.headers.token  );
+
+                     if(decoded.erro || decoded.payload === undefined) {
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Erro ao processar o token!" } })
+                     }  
+
+                        let cnpj = decoded.payload?.cnpj;
+                     let db =   `\`${cnpj}\``
+
             let param:ServicoArgs = { 
                 aplicacao: aplicacao,
                 ativo:ativo,
                 codigo:codigo,
                  data_recadastro:data_recadastro
             }    
-        let arrResult = await this.repository.findByParam(param);
+        let arrResult = await this.repository.findByParam(param, db);
         let resultService = arrResult[0] 
         return  resultService;
         
@@ -46,13 +75,27 @@ export class ServicoResolver{
 
      
     @Mutation(()=> Servico, { name:"CreateServico"})
-    async cadastrarServico( @Arg('dados') dados: CreateServicoInput ) :Promise<Servico> {
+    async cadastrarServico( @Arg('dados') dados: CreateServicoInput, @Ctx() context:any )  {
+
+
+             if(  !context.req.headers.token  ){
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Token nao informado!" } })
+                      } 
+                     let decoded = await this.tokenService.DecodedToken(context.req.headers.token  );
+
+                     if(decoded.erro || decoded.payload === undefined) {
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Erro ao processar o token!" } })
+                     }  
+
+                        let cnpj = decoded.payload?.cnpj;
+                     let db =   `\`${cnpj}\``
+
 
             if( !dados.data_cadastro ) dados.data_cadastro = this.dateService.obterDataAtual();
             if(!dados.id ) dados.id = 0;
             if(!dados.ativo ) dados.ativo = 'S';
              dados.data_recadastro = this.dateService.obterDataHoraAtual();
-             let resultInsertService =   await this.repository.insert(dados)
+             let resultInsertService =   await this.repository.insert(dados, db)
           
              let dadosService: Servico  =
               {
@@ -70,9 +113,21 @@ export class ServicoResolver{
 
 
     @Mutation(()=> Servico, { name: "UpdateServico"})
-       async updateServico( @Arg('dados') dados: UpdateServicoInput ):Promise<any> {
+       async updateServico( @Arg('dados') dados: UpdateServicoInput, @Ctx() context:any ) {
 
-        let verifiService = await this.repository.findByCode(dados.codigo)
+              if(  !context.req.headers.token  ){
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Token nao informado!" } })
+                      } 
+                     let decoded = await this.tokenService.DecodedToken(context.req.headers.token  );
+
+                     if(decoded.erro || decoded.payload === undefined) {
+                          return new GraphQLError('Erro', { extensions: { code: " CUSTOM_ERROR ", message: "Erro ao processar o token!" } })
+                     }  
+
+                        let cnpj = decoded.payload?.cnpj;
+                     let db =   `\`${cnpj}\``
+
+        let verifiService = await this.repository.findByCode(dados.codigo, db)
       
         if(!dados.id ) dados.id = 0;
          dados.data_recadastro = this.dateService.obterDataHoraAtual();
@@ -80,10 +135,10 @@ export class ServicoResolver{
             if( verifiService.length <= 0 ) { 
                 throw new GraphQLError(   'Erro', { extensions:{ code:" CUSTOM_ERROR ", message: "Servico nao encontrado" } }  )
             }    
-            let resultUpdateService = await this.repository.update(dados)
+            let resultUpdateService = await this.repository.update(dados, db)
            
               if(resultUpdateService.serverStatus > 0 ){
-                     let serviceResult:Servico[] = await this.repository.findByCode(dados.codigo)
+                     let serviceResult:Servico[] = await this.repository.findByCode(dados.codigo, db)
                  return serviceResult[0];
             } 
        }

@@ -4,7 +4,7 @@ import { Field, InputType, Int } from "type-graphql";
 @InputType({ description:"Dados para a criação de um produto"})
 export class CreateProdutoInput{
 
-    @Field(()=> Int)
+    @Field(()=> Int, { nullable:true })
     codigo:number
 
     @Field()
@@ -13,55 +13,54 @@ export class CreateProdutoInput{
     @Field()
     preco:number
     
-    @Field()
+    @Field(()=> Int, { nullable:true})
     id:number
 
-    @Field()
+    @Field(()=> Int, { nullable:true})
     estoque:number
     
-    @Field(()=> Int)
+    @Field(()=> Int, { nullable:true})
     grupo:number
 
-    @Field()
+    @Field({nullable:true})
     origem:string
 
-    @Field()
+    @Field({nullable:true})
     num_fabricante:string
 
-    @Field()
+    @Field({nullable:true})
     num_original:string
 
-    @Field()
+    @Field({ nullable:true })
     ativo:string
 
-    @Field()
+    @Field({ nullable:true })
     sku:string
     
-    @Field(()=> Int)
+    @Field(()=> Int, { nullable:true })
     marca:number
-  
     
-    @Field()
+    @Field({ nullable:true })
     class_fiscal:string
-    
-    @Field()
+   
+    @Field({ nullable:true })
     cst:string
     
-    @Field()
+    @Field({ nullable:true })
     data_recadastro:string
 
-    @Field()
+    @Field({ nullable:true })
     data_cadastro:string
 
-    @Field()
+    @Field({ nullable:true })
     observacoes1:string
     
-    @Field()
+    @Field({ nullable:true })
     observacoes2:string
 
-    @Field()
+    @Field({ nullable:true })
     observacoes3:string
-    
-    @Field()
+
+    @Field({ nullable:true })
     tipo:number
 }
